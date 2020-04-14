@@ -1,0 +1,1 @@
+# conflicted-the-stellaris-mod-manager
