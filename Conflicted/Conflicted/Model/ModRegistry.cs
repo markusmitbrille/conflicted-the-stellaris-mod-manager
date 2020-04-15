@@ -5,11 +5,11 @@ namespace Conflicted.Model
 {
     internal class ModRegistry : Dictionary<string, Mod>
     {
-        private readonly Dictionary<Mod, List<string>> fileConflicts;
-        public IReadOnlyDictionary<Mod, List<string>> FileConflicts => fileConflicts;
+        private readonly List<Conflict> fileConflicts = new List<Conflict>();
+        public IReadOnlyList<Conflict> FileConflicts => fileConflicts;
 
-        private readonly Dictionary<Mod, List<string>> elementConflicts;
-        public IReadOnlyDictionary<Mod, List<string>> ElementConflicts => elementConflicts;
+        private readonly List<Conflict> elementConflicts = new List<Conflict>();
+        public IReadOnlyList<Conflict> ElementConflicts => elementConflicts;
 
         public void FindFileConflicts()
         {

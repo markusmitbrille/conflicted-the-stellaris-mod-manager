@@ -15,6 +15,7 @@
             <MenuItem Header="_File">
                 <MenuItem Header="Open _Mod Registry" Command="{Binding OpenModRegistry}"/>
                 <MenuItem Header="Open _Game Data" Command="{Binding OpenGameDataCommand}"/>
+                <MenuItem Header="_Save Game Data" Command="{Binding SaveGameDataCommand}"/>
             </MenuItem>
             <MenuItem Header="_Extras">
                 <MenuItem Header="_Options" Command="{Binding OpenOptionsCommand}"/>
@@ -60,7 +61,7 @@
                         <DockPanel Grid.Row="0">
                             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                                 <TextBlock Text="Overwrites "/>
-                                <TextBlock Text="{Binding CountFilesOverwritten, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding CountFilesOverwrittenFrom, FallbackValue=0}"/>
                                 <TextBlock Text=" Mods for a total of "/>
                                 <TextBlock Text="{Binding CountFileConflictsCreated, FallbackValue=0}"/>
                                 <TextBlock Text=" Conflicts!"/>
@@ -106,7 +107,7 @@
                         <DockPanel Grid.Row="0">
                             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                                 <TextBlock Text="Overwrites "/>
-                                <TextBlock Text="{Binding CountElementsOverwritten, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding CountElementsOverwrittenFrom, FallbackValue=0}"/>
                                 <TextBlock Text=" Mods for a total of "/>
                                 <TextBlock Text="{Binding CountElementConflictsCreated, FallbackValue=0}"/>
                                 <TextBlock Text=" Conflicts!"/>

@@ -66,10 +66,18 @@ namespace Conflicted.Model
             }
         }
 
-        private readonly Dictionary<string, string> files;
+        private readonly Dictionary<string, string> files = new Dictionary<string, string>();
         public IReadOnlyDictionary<string, string> Files => files;
 
+        private readonly Dictionary<string, string> elements = new Dictionary<string, string>();
+        public IReadOnlyDictionary<string, string> Elements => elements;
+
         public void ReadFiles()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReadElements()
         {
             throw new NotImplementedException();
         }
