@@ -5,11 +5,12 @@ namespace Conflicted.Model
 {
     internal class Conflict
     {
+        private readonly List<Mod> conflictors;
+
         public Mod Mod { get; }
         public string File { get; }
         public string Text { get; }
 
-        private readonly List<Mod> conflictors;
         public IReadOnlyList<Mod> Conflictors => conflictors;
 
         public Conflict(Mod mod, string file, string text, List<Mod> conflictors)

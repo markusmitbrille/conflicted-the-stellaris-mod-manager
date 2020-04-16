@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Conflicted.ViewModel
 {
-    class RelayCommand : ICommand
+    internal class RelayCommand : ICommand
     {
         private readonly Action<object> execute;
         private readonly Predicate<object> canExecute;
@@ -18,7 +14,9 @@ namespace Conflicted.ViewModel
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RelayCommand(Action<object> execute) : this(execute, null){}
+        public RelayCommand(Action<object> execute) : this(execute, null)
+        {
+        }
 
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
@@ -31,7 +29,7 @@ namespace Conflicted.ViewModel
         public bool CanExecute(object parameter) => canExecute?.Invoke(parameter) ?? true;
     }
 
-    class RelayCommand<T> : ICommand
+    internal class RelayCommand<T> : ICommand
     {
         private readonly Action<T> execute;
         private readonly Predicate<T> canExecute;
@@ -42,7 +40,9 @@ namespace Conflicted.ViewModel
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RelayCommand(Action<T> execute) : this(execute, null) { }
+        public RelayCommand(Action<T> execute) : this(execute, null)
+        {
+        }
 
         public RelayCommand(Action<T> execute, Predicate<T> canExecute)
         {
