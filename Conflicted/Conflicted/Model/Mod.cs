@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Conflicted.Model
@@ -9,8 +11,8 @@ namespace Conflicted.Model
     {
         private const string SourceSteam = "steam";
 
-        private readonly Dictionary<string, string> files = new Dictionary<string, string>();
-        private readonly Dictionary<string, string> elements = new Dictionary<string, string>();
+        private List<string> files = new List<string>();
+        private List<string> elements = new List<string>();
 
         [DataMember(Name = "steamId")]
         public long SteamID { get; set; }
@@ -69,17 +71,24 @@ namespace Conflicted.Model
             }
         }
 
-        public IReadOnlyDictionary<string, string> Files => files;
-        public IReadOnlyDictionary<string, string> Elements => elements;
+        public IReadOnlyList<string> Files => files;
+        public IReadOnlyList<string> Elements => elements;
 
+        [OnDeserialized]
         public void ReadFiles()
         {
-            throw new NotImplementedException();
+            files = Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories).Select(file => file.Remove(0, DirPath.Length + 1)).ToList();
         }
 
         public void ReadElements()
         {
-            throw new NotImplementedException();
+            foreach (var file in Directory.GetFiles(DirPath, "*.txt", SearchOption.AllDirectories))
+            {
+                string directory = new DirectoryInfo(file).Name;
+                string text = File.ReadAllText(file);
+
+                throw new NotImplementedException();
+            }
         }
     }
 }
