@@ -88,11 +88,19 @@ namespace Conflicted.Model
                 case "component_templates":
                     return InterpretKeyedBlock(0, "component_templates", "key");
 
+                case "special_projects":
+                    return InterpretKeyedBlock(0, "special_projects", "key");
+                
+                case "section_templates":
+                    return InterpretKeyedBlock(0, "section_templates", "key");
+
                 case "ambient_objects":
                 case "on_actions":
                 case "projectiles":
+                case "technology":
                 case "terraform":
                 case "ship_behaviors":
+                case "global_ship_designs":
                     return InterpretIgnore();
 
                 default:

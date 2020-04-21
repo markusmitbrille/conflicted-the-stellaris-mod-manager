@@ -33,22 +33,28 @@ namespace Conflicted.ViewModel
         private readonly GameData gameData;
 
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
         private readonly Dictionary<Mod, IEnumerable<ModFile>> files = new Dictionary<Mod, IEnumerable<ModFile>>();
         private readonly Dictionary<Mod, IEnumerable<ModElement>> elements = new Dictionary<Mod, IEnumerable<ModElement>>();
+
         private readonly Dictionary<Mod, IEnumerable<ModFile>> overwrittenFiles = new Dictionary<Mod, IEnumerable<ModFile>>();
         private readonly Dictionary<Mod, IEnumerable<ModFile>> overwritingFiles = new Dictionary<Mod, IEnumerable<ModFile>>();
         private readonly Dictionary<Mod, IEnumerable<ModElement>> overwrittenElements = new Dictionary<Mod, IEnumerable<ModElement>>();
         private readonly Dictionary<Mod, IEnumerable<ModElement>> overWritingElements = new Dictionary<Mod, IEnumerable<ModElement>>();
+
         private readonly Dictionary<Mod, int> filesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> elementsCount = new Dictionary<Mod, int>();
+
         private readonly Dictionary<Mod, int> overwrittenFilesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> overwritingFilesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> overwrittenElementsCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> overwritingElementsCount = new Dictionary<Mod, int>();
+
         private readonly Dictionary<Mod, int> modsWithOverwrittenFilesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> modsWithOverwritingFilesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> modsWithOverwrittenElementsCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> modsWithOverwritingElementsCount = new Dictionary<Mod, int>();
+
         private int countMods;
         private int doneMods;
 

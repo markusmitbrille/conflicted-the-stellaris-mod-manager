@@ -12,6 +12,9 @@
   &lt;string&gt;thumbnail.jpg&lt;/string&gt;
   &lt;string&gt;thumb.png&lt;/string&gt;
   &lt;string&gt;thumb.jpg&lt;/string&gt;
+  &lt;string&gt;Patch Notes.txt&lt;/string&gt;
+  &lt;string&gt;patch notes.txt&lt;/string&gt;
+  &lt;string&gt;patchnotes.txt&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="Setting" Type="System.String" Scope="User">

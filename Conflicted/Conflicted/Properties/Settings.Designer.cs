@@ -34,6 +34,9 @@ namespace Conflicted.Properties {
   <string>thumbnail.jpg</string>
   <string>thumb.png</string>
   <string>thumb.jpg</string>
+  <string>Patch Notes.txt</string>
+  <string>patch notes.txt</string>
+  <string>patchnotes.txt</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection IgnoredFiles {
             get {
