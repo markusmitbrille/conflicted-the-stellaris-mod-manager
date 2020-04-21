@@ -164,10 +164,10 @@ namespace Conflicted.ViewModel
         public RelayCommand SaveGameDataCommand => saveGameDataCommand ?? (saveGameDataCommand = new RelayCommand(ExecuteSaveGameData, CanSaveGameData));
         public RelayCommand OpenOptionsCommand => openOptionsCommand ?? (openOptionsCommand = new RelayCommand(ExecuteOpenOptions));
 
-        public RelayCommand<Mod> MoveModTopCommand => moveModTopCommand ?? (moveModTopCommand = new RelayCommand<Mod>(ExecuteMoveModTop, CanMoveModTop));
-        public RelayCommand<Mod> MoveModUpCommand => moveModUpCommand ?? (moveModUpCommand = new RelayCommand<Mod>(ExecuteMoveModUp, CanMoveModUp));
-        public RelayCommand<Mod> MoveModDownCommand => moveModDownCommand ?? (moveModDownCommand = new RelayCommand<Mod>(ExecuteMoveModDown, CanMoveModDown));
-        public RelayCommand<Mod> MoveModBottomCommand => moveModBottomCommand ?? (moveModBottomCommand = new RelayCommand<Mod>(ExecuteMoveModBottom, CanMoveModBottom));
+        public RelayCommand MoveModTopCommand => moveModTopCommand ?? (moveModTopCommand = new RelayCommand(ExecuteMoveModTop, CanMoveModTop));
+        public RelayCommand MoveModUpCommand => moveModUpCommand ?? (moveModUpCommand = new RelayCommand(ExecuteMoveModUp, CanMoveModUp));
+        public RelayCommand MoveModDownCommand => moveModDownCommand ?? (moveModDownCommand = new RelayCommand(ExecuteMoveModDown, CanMoveModDown));
+        public RelayCommand MoveModBottomCommand => moveModBottomCommand ?? (moveModBottomCommand = new RelayCommand(ExecuteMoveModBottom, CanMoveModBottom));
        
         private ModRegistry modRegistry;
         private GameData gameData;
@@ -183,10 +183,10 @@ namespace Conflicted.ViewModel
         private RelayCommand saveGameDataCommand;
         private RelayCommand openOptionsCommand;
 
-        private RelayCommand<Mod> moveModTopCommand;
-        private RelayCommand<Mod> moveModUpCommand;
-        private RelayCommand<Mod> moveModDownCommand;
-        private RelayCommand<Mod> moveModBottomCommand;
+        private RelayCommand moveModTopCommand;
+        private RelayCommand moveModUpCommand;
+        private RelayCommand moveModDownCommand;
+        private RelayCommand moveModBottomCommand;
 
         private Mod selectedMod;
 
@@ -366,7 +366,7 @@ namespace Conflicted.ViewModel
             SaveFileDialog dialog = new SaveFileDialog()
             {
                 InitialDirectory = currentDirectory,
-                Filter = "JSON files (*.json)|*.json|Text files (*.txt)",
+                Filter = "JSON files (*.json)|*.json|Text files (*.txt)|*.txt",
                 CreatePrompt = false,
                 OverwritePrompt = true,
                 AddExtension = true
@@ -390,27 +390,27 @@ namespace Conflicted.ViewModel
             return modRegistry != null && gameData != null && selectedMod != null && gameData.ModsOrder.Contains(selectedMod.ID);
         }
 
-        private bool CanMoveModTop(Mod obj)
+        private bool CanMoveModTop(object obj)
         {
             return CanMoveMod() && selectedMod.ID != gameData.ModsOrder.First();
         }
 
-        private bool CanMoveModUp(Mod obj)
+        private bool CanMoveModUp(object obj)
         {
             return CanMoveMod() && selectedMod.ID != gameData.ModsOrder.First();
         }
 
-        private bool CanMoveModDown(Mod obj)
+        private bool CanMoveModDown(object obj)
         {
             return CanMoveMod() && selectedMod.ID != gameData.ModsOrder.Last();
         }
 
-        private bool CanMoveModBottom(Mod obj)
+        private bool CanMoveModBottom(object obj)
         {
             return CanMoveMod() && selectedMod.ID != gameData.ModsOrder.Last();
         }
 
-        private void ExecuteMoveModTop(Mod obj)
+        private void ExecuteMoveModTop(object obj)
         {
             gameData.ModsOrder.Remove(selectedMod.ID);
             gameData.ModsOrder.Insert(0, selectedMod.ID);
@@ -420,7 +420,7 @@ namespace Conflicted.ViewModel
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void ExecuteMoveModUp(Mod obj)
+        private void ExecuteMoveModUp(object obj)
         {
             int index = gameData.ModsOrder.IndexOf(selectedMod.ID);
             gameData.ModsOrder.Remove(selectedMod.ID);
@@ -431,7 +431,7 @@ namespace Conflicted.ViewModel
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void ExecuteMoveModDown(Mod obj)
+        private void ExecuteMoveModDown(object obj)
         {
             int index = gameData.ModsOrder.IndexOf(selectedMod.ID);
             gameData.ModsOrder.Remove(selectedMod.ID);
@@ -442,7 +442,7 @@ namespace Conflicted.ViewModel
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void ExecuteMoveModBottom(Mod obj)
+        private void ExecuteMoveModBottom(object obj)
         {
             gameData.ModsOrder.Remove(selectedMod.ID);
             gameData.ModsOrder.Add(selectedMod.ID);
