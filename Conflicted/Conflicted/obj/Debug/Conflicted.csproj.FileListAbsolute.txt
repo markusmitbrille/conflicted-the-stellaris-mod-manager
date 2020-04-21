@@ -1,7 +1,6 @@
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\bin\Debug\Conflicted.exe.config
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\bin\Debug\Conflicted.exe
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\bin\Debug\Conflicted.pdb
-C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\Conflicted.csprojAssemblyReference.cache
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\View\MainWindow.g.cs
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\App.g.cs
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\Conflicted_MarkupCompile.cache

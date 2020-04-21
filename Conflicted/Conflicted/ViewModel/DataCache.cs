@@ -33,22 +33,22 @@ namespace Conflicted.ViewModel
         private readonly GameData gameData;
 
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
+        private readonly Dictionary<Mod, IEnumerable<ModFile>> files = new Dictionary<Mod, IEnumerable<ModFile>>();
+        private readonly Dictionary<Mod, IEnumerable<ModElement>> elements = new Dictionary<Mod, IEnumerable<ModElement>>();
         private readonly Dictionary<Mod, IEnumerable<ModFile>> overwrittenFiles = new Dictionary<Mod, IEnumerable<ModFile>>();
         private readonly Dictionary<Mod, IEnumerable<ModFile>> overwritingFiles = new Dictionary<Mod, IEnumerable<ModFile>>();
         private readonly Dictionary<Mod, IEnumerable<ModElement>> overwrittenElements = new Dictionary<Mod, IEnumerable<ModElement>>();
         private readonly Dictionary<Mod, IEnumerable<ModElement>> overWritingElements = new Dictionary<Mod, IEnumerable<ModElement>>();
-
+        private readonly Dictionary<Mod, int> filesCount = new Dictionary<Mod, int>();
+        private readonly Dictionary<Mod, int> elementsCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> overwrittenFilesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> overwritingFilesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> overwrittenElementsCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> overwritingElementsCount = new Dictionary<Mod, int>();
-
         private readonly Dictionary<Mod, int> modsWithOverwrittenFilesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> modsWithOverwritingFilesCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> modsWithOverwrittenElementsCount = new Dictionary<Mod, int>();
         private readonly Dictionary<Mod, int> modsWithOverwritingElementsCount = new Dictionary<Mod, int>();
-
         private int countMods;
         private int doneMods;
 
@@ -65,6 +65,39 @@ namespace Conflicted.ViewModel
             cancellationTokenSource.Cancel();
         }
 
+        public IEnumerable<ModFile> GetFilesFor(Mod mod)
+        {
+            lock (files)
+            {
+                if (files.ContainsKey(mod))
+                {
+                    return files[mod];
+                }
+                else
+                {
+                    files[mod] = mod.Files;
+                    return mod.Files;
+                }
+            }
+        }
+
+        public IEnumerable<ModElement> GetElementsFor(Mod mod)
+        {
+            lock (elements)
+            {
+                if (elements.ContainsKey(mod))
+                {
+                    return elements[mod];
+                }
+                else
+                {
+                    var result = mod.Files.SelectMany(file => file.Elements);
+                    elements[mod] = result;
+                    return result;
+                }
+            }
+        }
+
         public IEnumerable<ModFile> GetOverwrittenFilesFor(Mod mod)
         {
             lock (overwrittenFiles)
@@ -76,6 +109,7 @@ namespace Conflicted.ViewModel
                 else
                 {
                     var result = modRegistry.ConflictedFiles
+                        .Where(file => !Properties.Settings.Default.IgnoredFiles.Contains(file.ID))
                         .Where(file => file.Mod != mod)
                         .Where(file => mod.Files.Contains(file))
                         .Where(file => gameData.ModsOrder.IndexOf(file.Mod.ID) < gameData.ModsOrder.IndexOf(mod.ID))
@@ -97,6 +131,7 @@ namespace Conflicted.ViewModel
                 else
                 {
                     var result = modRegistry.ConflictedFiles
+                        .Where(file => !Properties.Settings.Default.IgnoredFiles.Contains(file.ID))
                         .Where(file => file.Mod != mod)
                         .Where(file => mod.Files.Contains(file))
                         .Where(file => gameData.ModsOrder.IndexOf(file.Mod.ID) > gameData.ModsOrder.IndexOf(mod.ID))
@@ -145,6 +180,40 @@ namespace Conflicted.ViewModel
                         .OrderBy(element => element.File.Mod, gameData);
                     overWritingElements[mod] = result.ToList();
                     return result;
+                }
+            }
+        }
+
+        public int GetFilesCountFor(Mod mod)
+        {
+            lock (filesCount)
+            {
+                if (filesCount.ContainsKey(mod))
+                {
+                    return filesCount[mod];
+                }
+                else
+                {
+                    int count = GetFilesFor(mod).Count();
+                    filesCount[mod] = count;
+                    return count;
+                }
+            }
+        }
+
+        public int GetElementsCountFor(Mod mod)
+        {
+            lock (elementsCount)
+            {
+                if (elementsCount.ContainsKey(mod))
+                {
+                    return elementsCount[mod];
+                }
+                else
+                {
+                    int count = GetElementsFor(mod).Count();
+                    elementsCount[mod] = count;
+                    return count;
                 }
             }
         }

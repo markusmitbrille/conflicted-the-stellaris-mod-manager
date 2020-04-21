@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Conflicted.Model
@@ -8,11 +9,6 @@ namespace Conflicted.Model
     [DataContract]
     internal class Mod : IEquatable<Mod>
     {
-        private const string SourceSteam = "steam";
-
-        private readonly List<ModFile> files = new List<ModFile>();
-        private readonly List<ModElement> elements = new List<ModElement>();
-
         [DataMember(Name = "steamId")]
         public long SteamID { get; set; }
 
@@ -70,8 +66,10 @@ namespace Conflicted.Model
             }
         }
 
-        public IReadOnlyList<ModFile> Files => files;
-        public IReadOnlyList<ModElement> Elements => elements;
+        public IEnumerable<ModFile> Files { get; private set; }
+        public IEnumerable<ModElement> Elements { get; private set; }
+
+        private const string SourceSteam = "steam";
 
         public override string ToString()
         {
@@ -94,13 +92,28 @@ namespace Conflicted.Model
         }
 
         [OnDeserialized]
-        private void ReadFiles(StreamingContext context)
+        private void Initialize(StreamingContext context)
+        {
+            Files = ReadFiles().ToList();
+            Elements = ReadElements().ToList();
+        }
+
+        private IEnumerable<ModFile> ReadFiles()
         {
             foreach (var path in Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories))
             {
-                ModFile file = new ModFile(this, path);
-                files.Add(file);
-                elements.AddRange(file.Elements);
+                yield return new ModFile(this, path);
+            }
+        }
+
+        private IEnumerable<ModElement> ReadElements()
+        {
+            foreach (var file in Files)
+            {
+                foreach (var element in file.Elements)
+                {
+                    yield return element;
+                }
             }
         }
     }

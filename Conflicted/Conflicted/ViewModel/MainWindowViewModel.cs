@@ -22,6 +22,56 @@ namespace Conflicted.ViewModel
             }
         }
 
+        public IEnumerable<ModFile> Files
+        {
+            get
+            {
+                if (selectedMod == null)
+                {
+                    return null;
+                }
+                if (modRegistry == null)
+                {
+                    return null;
+                }
+                if (gameData == null)
+                {
+                    return null;
+                }
+                if (cache == null)
+                {
+                    return null;
+                }
+
+                return cache.GetFilesFor(selectedMod);
+            }
+        }
+
+        public IEnumerable<ModElement> Elements
+        {
+            get
+            {
+                if (selectedMod == null)
+                {
+                    return null;
+                }
+                if (modRegistry == null)
+                {
+                    return null;
+                }
+                if (gameData == null)
+                {
+                    return null;
+                }
+                if (cache == null)
+                {
+                    return null;
+                }
+
+                return cache.GetElementsFor(selectedMod);
+            }
+        }
+        
         public IEnumerable<ModFile> OverwrittenFiles
         {
             get
@@ -122,6 +172,9 @@ namespace Conflicted.ViewModel
             }
         }
 
+        public int FilesCount => selectedMod == null ? 0 : cache?.GetFilesCountFor(selectedMod) ?? 0;
+        public int ElementsCount => selectedMod == null ? 0 : cache?.GetElementsCountFor(selectedMod) ?? 0;
+
         public int OverwrittenFilesCount => selectedMod == null ? 0 : cache?.GetOverwrittenFilesCountFor(selectedMod) ?? 0;
         public int OverwritingFilesCount => selectedMod == null ? 0 : cache?.GetOverwritingFilesCountFor(selectedMod) ?? 0;
         public int OverwrittenElementsCount => selectedMod == null ? 0 : cache?.GetOverwrittenElementsCountFor(selectedMod) ?? 0;
@@ -141,10 +194,16 @@ namespace Conflicted.ViewModel
 
                 OnPropertyChanged();
 
+                OnPropertyChanged(nameof(Files));
+                OnPropertyChanged(nameof(Elements));
+
                 OnPropertyChanged(nameof(OverwrittenFiles));
                 OnPropertyChanged(nameof(OverwritingFiles));
                 OnPropertyChanged(nameof(OverwrittenElements));
                 OnPropertyChanged(nameof(OverwritingElements));
+
+                OnPropertyChanged(nameof(FilesCount));
+                OnPropertyChanged(nameof(ElementsCount));
 
                 OnPropertyChanged(nameof(OverwrittenFilesCount));
                 OnPropertyChanged(nameof(OverwritingFilesCount));
