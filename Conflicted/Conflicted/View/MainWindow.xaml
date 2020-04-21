@@ -162,20 +162,18 @@
                                             <Grid Grid.Row="0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="1*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="4*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="File: "/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="2" Text="Directory: "/>
-                                                <TextBlock Grid.Column="3" Text="{Binding Directory}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="4" Text="Mod: "/>
-                                                <TextBlock Grid.Column="5" Text="{Binding Mod.DisplayName}" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis" Text="{Binding Mod.DisplayName}" />
+                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="2" TextTrimming="CharacterEllipsis" Text="{Binding Directory}"/>
+                                                <TextBlock Grid.Column="3" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="4" TextTrimming="CharacterEllipsis" Text="{Binding Name}"/>
                                             </Grid>
-                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" TextTrimming="CharacterEllipsis" Text="{Binding Path}"/>
                                             <Expander Grid.Row="2" Margin="0 5 0 0" MaxHeight="200" Header="Content">
                                                 <TextBox
                                                     IsReadOnly="True"
@@ -256,24 +254,22 @@
                                             <Grid Grid.Row="0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="1*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="4*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="Element: "/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="2" Text="File: "/>
-                                                <TextBlock Grid.Column="3" Text="{Binding File.Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="4" Text="Directory: "/>
-                                                <TextBlock Grid.Column="5" Text="{Binding File.Directory}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="6" Text="Mod: "/>
-                                                <TextBlock Grid.Column="7" Text="{Binding File.Mod.DisplayName}" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis" Text="{Binding File.Mod.DisplayName}"/>
+                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="2" TextTrimming="CharacterEllipsis" Text="{Binding File.Directory}"/>
+                                                <TextBlock Grid.Column="3" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="4" TextTrimming="CharacterEllipsis" Text="{Binding File.Name}"/>
+                                                <TextBlock Grid.Column="5" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="6" TextTrimming="CharacterEllipsis" Text="{Binding Name}"/>
                                             </Grid>
-                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" Text="{Binding File.Path}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" TextTrimming="CharacterEllipsis" Text="{Binding File.Path}"/>
                                             <Expander Grid.Row="2" Margin="0 5 0 0" MaxHeight="200" Header="Content">
                                                 <TextBox
                                                     IsReadOnly="True"
@@ -358,20 +354,18 @@
                                             <Grid Grid.Row="0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="1*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="4*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="File: "/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="2" Text="Directory: "/>
-                                                <TextBlock Grid.Column="3" Text="{Binding Directory}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="4" Text="Mod: "/>
-                                                <TextBlock Grid.Column="5" Text="{Binding Mod.DisplayName}" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis" Text="{Binding Mod.DisplayName}" />
+                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="2" TextTrimming="CharacterEllipsis" Text="{Binding Directory}"/>
+                                                <TextBlock Grid.Column="3" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="4" TextTrimming="CharacterEllipsis" Text="{Binding Name}"/>
                                             </Grid>
-                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" TextTrimming="CharacterEllipsis" Text="{Binding Path}"/>
                                             <Expander Grid.Row="2" Margin="0 5 0 0" MaxHeight="200" Header="Content">
                                                 <TextBox
                                                     IsReadOnly="True"
@@ -448,20 +442,18 @@
                                             <Grid Grid.Row="0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="1*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="4*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="File: "/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="2" Text="Directory: "/>
-                                                <TextBlock Grid.Column="3" Text="{Binding Directory}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="4" Text="Mod: "/>
-                                                <TextBlock Grid.Column="5" Text="{Binding Mod.DisplayName}" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis" Text="{Binding Mod.DisplayName}" />
+                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="2" TextTrimming="CharacterEllipsis" Text="{Binding Directory}"/>
+                                                <TextBlock Grid.Column="3" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="4" TextTrimming="CharacterEllipsis" Text="{Binding Name}"/>
                                             </Grid>
-                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" Text="{Binding Path}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" TextTrimming="CharacterEllipsis" Text="{Binding Path}"/>
                                             <Expander Grid.Row="2" Margin="0 5 0 0" MaxHeight="200" Header="Content">
                                                 <TextBox
                                                     IsReadOnly="True"
@@ -553,24 +545,22 @@
                                             <Grid Grid.Row="0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="1*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="4*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="Element: "/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="2" Text="File: "/>
-                                                <TextBlock Grid.Column="3" Text="{Binding File.Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="4" Text="Directory: "/>
-                                                <TextBlock Grid.Column="5" Text="{Binding File.Directory}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="6" Text="Mod: "/>
-                                                <TextBlock Grid.Column="7" Text="{Binding File.Mod.DisplayName}" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis" Text="{Binding File.Mod.DisplayName}"/>
+                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="2" TextTrimming="CharacterEllipsis" Text="{Binding File.Directory}"/>
+                                                <TextBlock Grid.Column="3" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="4" TextTrimming="CharacterEllipsis" Text="{Binding File.Name}"/>
+                                                <TextBlock Grid.Column="5" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="6" TextTrimming="CharacterEllipsis" Text="{Binding Name}"/>
                                             </Grid>
-                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" Text="{Binding File.Path}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" TextTrimming="CharacterEllipsis" Text="{Binding File.Path}"/>
                                             <Expander Grid.Row="2" Margin="0 5 0 0" MaxHeight="200" Header="Content">
                                                 <TextBox
                                                     IsReadOnly="True"
@@ -647,24 +637,22 @@
                                             <Grid Grid.Row="0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="2*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="1*"/>
                                                     <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="4*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="Element: "/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="2" Text="File: "/>
-                                                <TextBlock Grid.Column="3" Text="{Binding File.Name}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="4" Text="Directory: "/>
-                                                <TextBlock Grid.Column="5" Text="{Binding File.Directory}" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Column="6" Text="Mod: "/>
-                                                <TextBlock Grid.Column="7" Text="{Binding File.Mod.DisplayName}" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis" Text="{Binding File.Mod.DisplayName}"/>
+                                                <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="2" TextTrimming="CharacterEllipsis" Text="{Binding File.Directory}"/>
+                                                <TextBlock Grid.Column="3" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="4" TextTrimming="CharacterEllipsis" Text="{Binding File.Name}"/>
+                                                <TextBlock Grid.Column="5" TextTrimming="CharacterEllipsis" Text=" &#11208; "/>
+                                                <TextBlock Grid.Column="6" TextTrimming="CharacterEllipsis" Text="{Binding Name}"/>
                                             </Grid>
-                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" Text="{Binding File.Path}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Row="1" Margin="0 5 0 0" TextTrimming="CharacterEllipsis" Text="{Binding File.Path}"/>
                                             <Expander Grid.Row="2" Margin="0 5 0 0" MaxHeight="200" Header="Content">
                                                 <TextBox
                                                     IsReadOnly="True"
