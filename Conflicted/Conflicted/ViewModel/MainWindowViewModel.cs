@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Conflicted.ViewModel
 {
@@ -168,7 +167,7 @@ namespace Conflicted.ViewModel
         public RelayCommand MoveModUpCommand => moveModUpCommand ?? (moveModUpCommand = new RelayCommand(ExecuteMoveModUp, CanMoveModUp));
         public RelayCommand MoveModDownCommand => moveModDownCommand ?? (moveModDownCommand = new RelayCommand(ExecuteMoveModDown, CanMoveModDown));
         public RelayCommand MoveModBottomCommand => moveModBottomCommand ?? (moveModBottomCommand = new RelayCommand(ExecuteMoveModBottom, CanMoveModBottom));
-       
+
         private ModRegistry modRegistry;
         private GameData gameData;
 

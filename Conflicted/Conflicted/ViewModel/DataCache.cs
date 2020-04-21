@@ -75,7 +75,7 @@ namespace Conflicted.ViewModel
                 }
                 else
                 {
-                    IOrderedEnumerable<ModFile> result = modRegistry.ConflictedFiles
+                    var result = modRegistry.ConflictedFiles
                         .Where(file => file.Mod != mod)
                         .Where(file => mod.Files.Contains(file))
                         .Where(file => gameData.ModsOrder.IndexOf(file.Mod.ID) < gameData.ModsOrder.IndexOf(mod.ID))
@@ -96,7 +96,7 @@ namespace Conflicted.ViewModel
                 }
                 else
                 {
-                    IOrderedEnumerable<ModFile> result = modRegistry.ConflictedFiles
+                    var result = modRegistry.ConflictedFiles
                         .Where(file => file.Mod != mod)
                         .Where(file => mod.Files.Contains(file))
                         .Where(file => gameData.ModsOrder.IndexOf(file.Mod.ID) > gameData.ModsOrder.IndexOf(mod.ID))
@@ -117,9 +117,9 @@ namespace Conflicted.ViewModel
                 }
                 else
                 {
-                    IOrderedEnumerable<ModElement> result = modRegistry.ConflictedElements
+                    var result = modRegistry.ConflictedElements
                         .Where(element => element.File.Mod != mod)
-                        .Where(element => mod.Files.SelectMany(file => file.Elements).Contains(element))
+                        .Where(element => mod.Elements.Contains(element))
                         .Where(element => gameData.ModsOrder.IndexOf(element.File.Mod.ID) < gameData.ModsOrder.IndexOf(mod.ID))
                         .OrderBy(element => element.File.Mod, gameData);
                     overwrittenElements[mod] = result.ToList();
@@ -138,9 +138,9 @@ namespace Conflicted.ViewModel
                 }
                 else
                 {
-                    IOrderedEnumerable<ModElement> result = modRegistry.ConflictedElements
+                    var result = modRegistry.ConflictedElements
                         .Where(element => element.File.Mod != mod)
-                        .Where(element => mod.Files.SelectMany(file => file.Elements).Contains(element))
+                        .Where(element => mod.Elements.Contains(element))
                         .Where(element => gameData.ModsOrder.IndexOf(element.File.Mod.ID) > gameData.ModsOrder.IndexOf(mod.ID))
                         .OrderBy(element => element.File.Mod, gameData);
                     overWritingElements[mod] = result.ToList();

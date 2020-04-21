@@ -11,8 +11,8 @@
     <Window.DataContext>
         <ViewModel:MainWindowViewModel/>
     </Window.DataContext>
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
+    <DockPanel Margin="5">
+        <Menu DockPanel.Dock="Top" Margin="0 0 0 5">
             <MenuItem Header="_File">
                 <MenuItem Header="Open _Mod Registry" Command="{Binding OpenModRegistryCommand}"/>
                 <MenuItem Header="Open _Game Data" Command="{Binding OpenGameDataCommand}"/>
@@ -22,10 +22,10 @@
                 <MenuItem Header="_Options" Command="{Binding OpenOptionsCommand}"/>
             </MenuItem>
         </Menu>
-        <Grid DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Stretch">
+        <Grid DockPanel.Dock="Bottom" Margin="0 5 0 0" HorizontalAlignment="Stretch">
             <ProgressBar Height="20" Value="{Binding Cache.DoneMods}" Minimum="0" Maximum="{Binding Cache.CountMods}"/>
         </Grid>
-        <Grid Margin="5">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" MinWidth="300"/>
                 <ColumnDefinition Width="5*" MinWidth="500"/>

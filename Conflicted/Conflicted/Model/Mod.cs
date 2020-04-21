@@ -11,6 +11,7 @@ namespace Conflicted.Model
         private const string SourceSteam = "steam";
 
         private readonly List<ModFile> files = new List<ModFile>();
+        private readonly List<ModElement> elements = new List<ModElement>();
 
         [DataMember(Name = "steamId")]
         public long SteamID { get; set; }
@@ -70,6 +71,7 @@ namespace Conflicted.Model
         }
 
         public IReadOnlyList<ModFile> Files => files;
+        public IReadOnlyList<ModElement> Elements => elements;
 
         public override string ToString()
         {
@@ -96,7 +98,9 @@ namespace Conflicted.Model
         {
             foreach (var path in Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories))
             {
-                files.Add(new ModFile(this, path));
+                ModFile file = new ModFile(this, path);
+                files.Add(file);
+                elements.AddRange(file.Elements);
             }
         }
     }
