@@ -13,3 +13,8 @@ C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conf
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\Conflicted.csproj.CoreCompileInputs.cache
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\Conflicted.exe
 C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\Conflicted.pdb
+C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\bin\Debug\Newtonsoft.Json.dll
+C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\obj\Debug\Conflicted.csproj.CopyComplete
+C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\bin\Debug\Microsoft.Toolkit.Wpf.UI.Controls.WebView.dll
+C:\Users\makak\source\repos\conflicted-the-stellaris-mod-manager\Conflicted\Conflicted\bin\Debug\Microsoft.Toolkit.Wpf.UI.Controls.WebView.pdb

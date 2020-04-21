@@ -5,15 +5,178 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Conflicted.ViewModel
 {
     internal class MainWindowViewModel : BaseViewModel
     {
+        public IEnumerable<Mod> Mods => gameData == null ? modRegistry?.Values.OrderBy(mod => mod.DisplayName) : modRegistry?.Values.OrderBy(mod => mod, gameData);
+
+        public DataCache Cache
+        {
+            get => cache;
+            set
+            {
+                cache = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<ModFile> OverwrittenFiles
+        {
+            get
+            {
+                if (selectedMod == null)
+                {
+                    return null;
+                }
+                if (modRegistry == null)
+                {
+                    return null;
+                }
+                if (gameData == null)
+                {
+                    return null;
+                }
+                if (cache == null)
+                {
+                    return null;
+                }
+
+                return cache.GetOverwrittenFilesFor(selectedMod);
+            }
+        }
+
+        public IEnumerable<ModFile> OverwritingFiles
+        {
+            get
+            {
+                if (selectedMod == null)
+                {
+                    return null;
+                }
+                if (modRegistry == null)
+                {
+                    return null;
+                }
+                if (gameData == null)
+                {
+                    return null;
+                }
+                if (cache == null)
+                {
+                    return null;
+                }
+
+                return cache.GetOverwritingFilesFor(selectedMod);
+            }
+        }
+
+        public IEnumerable<ModElement> OverwrittenElements
+        {
+            get
+            {
+                if (selectedMod == null)
+                {
+                    return null;
+                }
+                if (modRegistry == null)
+                {
+                    return null;
+                }
+                if (gameData == null)
+                {
+                    return null;
+                }
+                if (cache == null)
+                {
+                    return null;
+                }
+
+                return cache.GetOverwrittenElementsFor(selectedMod);
+            }
+        }
+
+        public IEnumerable<ModElement> OverwritingElements
+        {
+            get
+            {
+                if (selectedMod == null)
+                {
+                    return null;
+                }
+                if (modRegistry == null)
+                {
+                    return null;
+                }
+                if (gameData == null)
+                {
+                    return null;
+                }
+                if (cache == null)
+                {
+                    return null;
+                }
+
+                return cache.GetOverwritingElementsFor(selectedMod);
+            }
+        }
+
+        public int OverwrittenFilesCount => selectedMod == null ? 0 : cache?.GetOverwrittenFilesCountFor(selectedMod) ?? 0;
+        public int OverwritingFilesCount => selectedMod == null ? 0 : cache?.GetOverwritingFilesCountFor(selectedMod) ?? 0;
+        public int OverwrittenElementsCount => selectedMod == null ? 0 : cache?.GetOverwrittenElementsCountFor(selectedMod) ?? 0;
+        public int OverwritingElementsCount => selectedMod == null ? 0 : cache?.GetOverwritingElementsCountFor(selectedMod) ?? 0;
+
+        public int ModsWithOverwrittenFilesCount => selectedMod == null ? 0 : cache?.GetModsWithOverwrittenFilesCountFor(selectedMod) ?? 0;
+        public int ModsWithOverwritingFilesCount => selectedMod == null ? 0 : cache?.GetModsWithOverwritingFilesCountFor(selectedMod) ?? 0;
+        public int ModsWithOverwrittenElementsCount => selectedMod == null ? 0 : cache?.GetModsWithOverwrittenElementsCountFor(selectedMod) ?? 0;
+        public int ModsWithOverwritingElementsCount => selectedMod == null ? 0 : cache?.GetModsWithOverwritingElementsCountFor(selectedMod) ?? 0;
+
+        public Mod SelectedMod
+        {
+            get => selectedMod;
+            set
+            {
+                selectedMod = value;
+
+                OnPropertyChanged();
+
+                OnPropertyChanged(nameof(OverwrittenFiles));
+                OnPropertyChanged(nameof(OverwritingFiles));
+                OnPropertyChanged(nameof(OverwrittenElements));
+                OnPropertyChanged(nameof(OverwritingElements));
+
+                OnPropertyChanged(nameof(OverwrittenFilesCount));
+                OnPropertyChanged(nameof(OverwritingFilesCount));
+                OnPropertyChanged(nameof(OverwrittenElementsCount));
+                OnPropertyChanged(nameof(OverwritingElementsCount));
+
+                OnPropertyChanged(nameof(ModsWithOverwrittenFilesCount));
+                OnPropertyChanged(nameof(ModsWithOverwritingFilesCount));
+                OnPropertyChanged(nameof(ModsWithOverwrittenElementsCount));
+                OnPropertyChanged(nameof(ModsWithOverwritingElementsCount));
+            }
+        }
+
+        public RelayCommand OpenModRegistryCommand => openModRegistryCommand ?? (openModRegistryCommand = new RelayCommand(ExecuteOpenModRegistry));
+        public RelayCommand OpenGameDataCommand => openGameDataCommand ?? (openGameDataCommand = new RelayCommand(ExecuteOpenGameData));
+        public RelayCommand SaveGameDataCommand => saveGameDataCommand ?? (saveGameDataCommand = new RelayCommand(ExecuteSaveGameData, CanSaveGameData));
+        public RelayCommand OpenOptionsCommand => openOptionsCommand ?? (openOptionsCommand = new RelayCommand(ExecuteOpenOptions));
+
+        public RelayCommand<Mod> MoveModTopCommand => moveModTopCommand ?? (moveModTopCommand = new RelayCommand<Mod>(ExecuteMoveModTop, CanMoveModTop));
+        public RelayCommand<Mod> MoveModUpCommand => moveModUpCommand ?? (moveModUpCommand = new RelayCommand<Mod>(ExecuteMoveModUp, CanMoveModUp));
+        public RelayCommand<Mod> MoveModDownCommand => moveModDownCommand ?? (moveModDownCommand = new RelayCommand<Mod>(ExecuteMoveModDown, CanMoveModDown));
+        public RelayCommand<Mod> MoveModBottomCommand => moveModBottomCommand ?? (moveModBottomCommand = new RelayCommand<Mod>(ExecuteMoveModBottom, CanMoveModBottom));
+       
         private ModRegistry modRegistry;
         private GameData gameData;
 
+        private DataCache cache;
+
         private string currentDirectory;
+        private string currentModRegistry;
+        private string currentGameData;
 
         private RelayCommand openModRegistryCommand;
         private RelayCommand openGameDataCommand;
@@ -27,328 +190,73 @@ namespace Conflicted.ViewModel
 
         private Mod selectedMod;
 
-        private Conflict selectedCreatedFileConflict;
-        private Conflict selectedSufferedFileConflict;
-        private Conflict selectedCreatedElementConflict;
-        private Conflict selectedSufferedElementConflict;
-
-        public IEnumerable<Mod> Mods => gameData == null ? modRegistry?.Values.OrderBy(mod => mod.DisplayName) : modRegistry?.Values.OrderBy(mod => mod, gameData);
-
-        public IEnumerable<Conflict> FileConflictsCreated
-        {
-            get
-            {
-                if (selectedMod == null)
-                {
-                    return null;
-                }
-                if (modRegistry == null)
-                {
-                    return null;
-                }
-                if (gameData == null)
-                {
-                    return null;
-                }
-
-                return
-                    from conflict in modRegistry.FileConflicts
-                    where conflict.Mod != selectedMod
-                    where conflict.Conflictors.Contains(selectedMod)
-                    where gameData.ModsOrder.IndexOf(conflict.Mod.ID) < gameData.ModsOrder.IndexOf(selectedMod.ID)
-                    select conflict;
-            }
-        }
-
-        public IEnumerable<Conflict> FileConflictsSuffered
-        {
-            get
-            {
-                if (selectedMod == null)
-                {
-                    return null;
-                }
-                if (modRegistry == null)
-                {
-                    return null;
-                }
-                if (gameData == null)
-                {
-                    return null;
-                }
-
-                return
-                    from conflict in modRegistry.FileConflicts
-                    where conflict.Mod != selectedMod
-                    where conflict.Conflictors.Contains(selectedMod)
-                    where gameData.ModsOrder.IndexOf(conflict.Mod.ID) > gameData.ModsOrder.IndexOf(selectedMod.ID)
-                    select conflict;
-            }
-        }
-
-        public IEnumerable<Conflict> ElementConflictsCreated
-        {
-            get
-            {
-                if (selectedMod == null)
-                {
-                    return null;
-                }
-                if (modRegistry == null)
-                {
-                    return null;
-                }
-                if (gameData == null)
-                {
-                    return null;
-                }
-
-                return
-                    from conflict in modRegistry.ElementConflicts
-                    where conflict.Mod != selectedMod
-                    where conflict.Conflictors.Contains(selectedMod)
-                    where gameData.ModsOrder.IndexOf(conflict.Mod.ID) < gameData.ModsOrder.IndexOf(selectedMod.ID)
-                    select conflict;
-            }
-        }
-
-        public IEnumerable<Conflict> ElementConflictsSuffered
-        {
-            get
-            {
-                if (selectedMod == null)
-                {
-                    return null;
-                }
-                if (modRegistry == null)
-                {
-                    return null;
-                }
-                if (gameData == null)
-                {
-                    return null;
-                }
-
-                return
-                    from conflict in modRegistry.ElementConflicts
-                    where conflict.Mod != selectedMod
-                    where conflict.Conflictors.Contains(selectedMod)
-                    where gameData.ModsOrder.IndexOf(conflict.Mod.ID) > gameData.ModsOrder.IndexOf(selectedMod.ID)
-                    select conflict;
-            }
-        }
-
-        public int CountElementConflictsCreated => ElementConflictsCreated.Count();
-        public int CountElementsOverwrittenFrom => ElementConflictsCreated.SelectMany(conflict => conflict.Conflictors).Distinct().Count();
-
-        public int CountElementConflictsSuffered => ElementConflictsSuffered.Count();
-        public int CountElementsOverwrittenBy => ElementConflictsSuffered.SelectMany(conflict => conflict.Conflictors).Distinct().Count();
-
-        public int CountFileConflictsCreated => FileConflictsCreated.Count();
-        public int CountFilesOverwrittenFrom => FileConflictsCreated.SelectMany(conflict => conflict.Conflictors).Distinct().Count();
-
-        public int CountFileConflictsSuffered => FileConflictsSuffered.Count();
-        public int CountFilesOverwrittenBy => FileConflictsSuffered.SelectMany(conflict => conflict.Conflictors).Distinct().Count();
-
-        public Mod SelectedMod
-        {
-            get => selectedMod;
-            set
-            {
-                selectedMod = value;
-                SelectedCreatedFileConflict = null;
-                SelectedSufferedFileConflict = null;
-                SelectedCreatedElementConflict = null;
-                SelectedSufferedElementConflict = null;
-
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CountFilesOverwrittenFrom));
-                OnPropertyChanged(nameof(CountFileConflictsCreated));
-                OnPropertyChanged(nameof(FileConflictsCreated));
-                OnPropertyChanged(nameof(CountFilesOverwrittenBy));
-                OnPropertyChanged(nameof(CountFileConflictsSuffered));
-                OnPropertyChanged(nameof(FileConflictsSuffered));
-                OnPropertyChanged(nameof(CountElementsOverwrittenFrom));
-                OnPropertyChanged(nameof(CountElementConflictsCreated));
-                OnPropertyChanged(nameof(ElementConflictsCreated));
-                OnPropertyChanged(nameof(CountElementsOverwrittenBy));
-                OnPropertyChanged(nameof(CountElementConflictsSuffered));
-                OnPropertyChanged(nameof(ElementConflictsSuffered));
-            }
-        }
-
-        public Conflict SelectedCreatedFileConflict
-        {
-            get => selectedCreatedFileConflict;
-            set
-            {
-                if (value != null)
-                {
-                    SelectedSufferedFileConflict = null;
-                    SelectedCreatedElementConflict = null;
-                    SelectedSufferedElementConflict = null;
-                }
-
-                selectedCreatedFileConflict = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Conflict SelectedSufferedFileConflict
-        {
-            get => selectedSufferedFileConflict;
-            set
-            {
-                if (value != null)
-                {
-                    SelectedCreatedFileConflict = null;
-                    SelectedCreatedElementConflict = null;
-                    SelectedSufferedElementConflict = null;
-                }
-
-                selectedSufferedFileConflict = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Conflict SelectedCreatedElementConflict
-        {
-            get => selectedCreatedElementConflict;
-            set
-            {
-                if (value != null)
-                {
-                    SelectedCreatedFileConflict = null;
-                    SelectedSufferedFileConflict = null;
-                    SelectedSufferedElementConflict = null;
-                }
-
-                selectedCreatedElementConflict = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Conflict SelectedSufferedElementConflict
-        {
-            get => selectedSufferedElementConflict;
-            set
-            {
-                if (value != null)
-                {
-                    SelectedCreatedFileConflict = null;
-                    SelectedSufferedFileConflict = null;
-                    SelectedCreatedElementConflict = null;
-                }
-
-                selectedSufferedElementConflict = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public RelayCommand OpenModRegistryCommand => openModRegistryCommand ?? (openModRegistryCommand = new RelayCommand(OpenModRegistry));
-        public RelayCommand OpenGameDataCommand => openGameDataCommand ?? (openGameDataCommand = new RelayCommand(OpenGameData));
-        public RelayCommand SaveGameDataCommand => saveGameDataCommand ?? (saveGameDataCommand = new RelayCommand(SaveGameData, CanSaveGameData));
-        public RelayCommand OpenOptionsCommand => openOptionsCommand ?? (openOptionsCommand = new RelayCommand(OpenOptions));
-
-        public RelayCommand<Mod> MoveModTopCommand => moveModTopCommand ?? (moveModTopCommand = new RelayCommand<Mod>(MoveModTop, CanMoveModTop));
-        public RelayCommand<Mod> MoveModUpCommand => moveModUpCommand ?? (moveModUpCommand = new RelayCommand<Mod>(MoveModUp, CanMoveModUp));
-        public RelayCommand<Mod> MoveModDownCommand => moveModDownCommand ?? (moveModDownCommand = new RelayCommand<Mod>(MoveModDown, CanMoveModDown));
-        public RelayCommand<Mod> MoveModBottomCommand => moveModBottomCommand ?? (moveModBottomCommand = new RelayCommand<Mod>(MoveModBottom, CanMoveModBottom));
-
         public MainWindowViewModel()
         {
+            string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}{Path.DirectorySeparatorChar}Paradox Interactive{Path.DirectorySeparatorChar}Stellaris";
+            if (Directory.Exists(path))
+            {
+                currentDirectory = path;
+
+                if (File.Exists($"{path}{Path.DirectorySeparatorChar}mods_registry.json") &&
+                    File.Exists($"{path}{Path.DirectorySeparatorChar}game_data.json"))
+                {
+                    OpenModRegistry($"{path}{Path.DirectorySeparatorChar}mods_registry.json");
+                    OpenGameData($"{path}{Path.DirectorySeparatorChar}game_data.json");
+                }
+            }
+            else
+            {
+                currentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
         }
 
-        private void OpenModRegistry(object obj)
+        private void OpenModRegistry(string file)
         {
-            OpenFileDialog dialog = new OpenFileDialog()
-            {
-                InitialDirectory = currentDirectory ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                Filter = "JSON files (*.json)|*.json|Text files (*.txt)|*.txt|All files (*.*)|*.*",
-                Multiselect = false,
-                CheckFileExists = true,
-                CheckPathExists = true
-            };
-
-            if (dialog.ShowDialog() != true)
-            {
-                return;
-            }
-
-            if (!File.Exists(dialog.FileName))
-            {
-                return;
-            }
-
-            SelectedMod = null;
-
-            currentDirectory = Path.GetDirectoryName(dialog.FileName);
-            modRegistry = JsonConvert.DeserializeObject<ModRegistry>(File.ReadAllText(dialog.FileName));
-
-            UpdateGameData();
-
-            OnPropertyChanged(nameof(Mods));
-        }
-
-        private void OpenGameData(object obj)
-        {
-            OpenFileDialog dialog = new OpenFileDialog()
-            {
-                InitialDirectory = currentDirectory ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                Filter = "JSON files (*.json)|*.json|Text files (*.txt)|*.txt|All files (*.*)|*.*",
-                Multiselect = false,
-                CheckFileExists = true,
-                CheckPathExists = true
-            };
-
-            if (dialog.ShowDialog() != true)
-            {
-                return;
-            }
-
-            if (!File.Exists(dialog.FileName))
+            if (!File.Exists(file))
             {
                 return;
             }
 
             SelectedMod = null;
 
-            currentDirectory = Path.GetDirectoryName(dialog.FileName);
-            gameData = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(dialog.FileName));
+            currentDirectory = Path.GetDirectoryName(file);
+            currentModRegistry = file;
+            modRegistry = JsonConvert.DeserializeObject<ModRegistry>(File.ReadAllText(file));
 
             UpdateGameData();
+            BuildDataCache();
 
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void OpenOptions(object obj)
+        private void OpenGameData(string file)
         {
-            throw new NotImplementedException();
-        }
-
-        private bool CanSaveGameData(object obj)
-        {
-            return gameData != null;
-        }
-
-        private void SaveGameData(object obj)
-        {
-            SaveFileDialog dialog = new SaveFileDialog()
-            {
-                InitialDirectory = currentDirectory ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                Filter = "JSON files (*.json)|*.json|Text files (*.txt)",
-                CreatePrompt = false,
-                OverwritePrompt = true,
-                AddExtension = true
-            };
-
-            if (dialog.ShowDialog() != true)
+            if (!File.Exists(file))
             {
                 return;
             }
 
-            currentDirectory = Path.GetDirectoryName(dialog.FileName);
-            File.WriteAllText(dialog.FileName, JsonConvert.SerializeObject(gameData));
+            SelectedMod = null;
+
+            currentDirectory = Path.GetDirectoryName(file);
+            currentGameData = file;
+            gameData = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(file));
+
+            UpdateGameData();
+            BuildDataCache();
+
+            OnPropertyChanged(nameof(Mods));
+        }
+
+        private void SaveGameData(string file)
+        {
+            if (File.Exists(file))
+            {
+                File.Copy(file, $"{Path.GetDirectoryName(file)}{Path.DirectorySeparatorChar}{DateTime.Now:yyyyMMddHHmmss}_{Path.GetFileName(file)}.bak", true);
+            }
+
+            currentDirectory = Path.GetDirectoryName(file);
+            File.WriteAllText(file, JsonConvert.SerializeObject(gameData));
         }
 
         private void UpdateGameData()
@@ -360,7 +268,7 @@ namespace Conflicted.ViewModel
 
             if (gameData == null)
             {
-                return;
+                gameData = new GameData();
             }
 
             foreach (var mod in modRegistry.Values)
@@ -371,7 +279,110 @@ namespace Conflicted.ViewModel
                 }
             }
 
+            BuildDataCache();
+
             OnPropertyChanged(nameof(Mods));
+        }
+
+        private void BuildDataCache()
+        {
+            if (modRegistry == null)
+            {
+                return;
+            }
+            if (gameData == null)
+            {
+                return;
+            }
+
+            if (cache != null)
+            {
+                cache.CancelCaching();
+            }
+
+            Cache = new DataCache(modRegistry, gameData);
+        }
+
+        private void ExecuteOpenModRegistry(object obj)
+        {
+            OpenFileDialog dialog = new OpenFileDialog()
+            {
+                InitialDirectory = currentDirectory,
+                Filter = "JSON files (*.json)|*.json|Text files (*.txt)|*.txt|All files (*.*)|*.*",
+                Multiselect = false,
+                CheckFileExists = true,
+                CheckPathExists = true
+            };
+
+            if (currentModRegistry != null)
+            {
+                dialog.FileName = currentModRegistry;
+            }
+
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+
+            OpenModRegistry(dialog.FileName);
+        }
+
+        private void ExecuteOpenGameData(object obj)
+        {
+            OpenFileDialog dialog = new OpenFileDialog()
+            {
+                InitialDirectory = currentDirectory,
+                Filter = "JSON files (*.json)|*.json|Text files (*.txt)|*.txt|All files (*.*)|*.*",
+                Multiselect = false,
+                CheckFileExists = true,
+                CheckPathExists = true
+            };
+
+            if (currentGameData != null)
+            {
+                dialog.FileName = currentGameData;
+            }
+
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+
+            OpenGameData(dialog.FileName);
+        }
+
+        private void ExecuteOpenOptions(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool CanSaveGameData(object obj)
+        {
+            return gameData != null;
+        }
+
+        private void ExecuteSaveGameData(object obj)
+        {
+            SaveFileDialog dialog = new SaveFileDialog()
+            {
+                InitialDirectory = currentDirectory,
+                Filter = "JSON files (*.json)|*.json|Text files (*.txt)",
+                CreatePrompt = false,
+                OverwritePrompt = true,
+                AddExtension = true
+            };
+
+            if (currentGameData != null)
+            {
+                dialog.FileName = currentGameData;
+            }
+
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+
+            SaveGameData(dialog.FileName);
         }
 
         private bool CanMoveMod()
@@ -399,36 +410,44 @@ namespace Conflicted.ViewModel
             return CanMoveMod() && selectedMod.ID != gameData.ModsOrder.Last();
         }
 
-        private void MoveModTop(Mod obj)
+        private void ExecuteMoveModTop(Mod obj)
         {
             gameData.ModsOrder.Remove(selectedMod.ID);
             gameData.ModsOrder.Insert(0, selectedMod.ID);
 
+            BuildDataCache();
+
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void MoveModUp(Mod obj)
+        private void ExecuteMoveModUp(Mod obj)
         {
             int index = gameData.ModsOrder.IndexOf(selectedMod.ID);
             gameData.ModsOrder.Remove(selectedMod.ID);
             gameData.ModsOrder.Insert(index - 1, selectedMod.ID);
 
+            BuildDataCache();
+
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void MoveModDown(Mod obj)
+        private void ExecuteMoveModDown(Mod obj)
         {
             int index = gameData.ModsOrder.IndexOf(selectedMod.ID);
             gameData.ModsOrder.Remove(selectedMod.ID);
             gameData.ModsOrder.Insert(index + 1, selectedMod.ID);
 
+            BuildDataCache();
+
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void MoveModBottom(Mod obj)
+        private void ExecuteMoveModBottom(Mod obj)
         {
             gameData.ModsOrder.Remove(selectedMod.ID);
             gameData.ModsOrder.Add(selectedMod.ID);
+
+            BuildDataCache();
 
             OnPropertyChanged(nameof(Mods));
         }

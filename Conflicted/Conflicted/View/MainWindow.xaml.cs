@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Conflicted.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,17 @@ namespace Conflicted.View
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Mods_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Mod mod = mods.SelectedItem as Mod;
+            if (mod == null)
+            {
+                return;
+            }
+
+            browser.Navigate(mod.WebPageUrl);
         }
     }
 }

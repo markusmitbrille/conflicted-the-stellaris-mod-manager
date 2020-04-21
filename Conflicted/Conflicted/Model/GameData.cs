@@ -7,10 +7,10 @@ namespace Conflicted.Model
     internal class GameData : Comparer<Mod>
     {
         [DataMember(Name = "modsOrder")]
-        public List<string> ModsOrder { get; set; }
+        public List<string> ModsOrder { get; set; } = new List<string>();
 
         [DataMember(Name = "isEulaAccepted")]
-        public bool IsEulaAccepted { get; set; }
+        public bool IsEulaAccepted { get; set; } = true;
 
         public override int Compare(Mod x, Mod y)
         {

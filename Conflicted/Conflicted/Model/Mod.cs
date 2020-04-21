@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Conflicted.Model
 {
     [DataContract]
-    internal class Mod
+    internal class Mod : IEquatable<Mod>
     {
         private const string SourceSteam = "steam";
 
-        private List<string> files = new List<string>();
-        private List<string> elements = new List<string>();
+        private readonly List<ModFile> files = new List<ModFile>();
 
         [DataMember(Name = "steamId")]
         public long SteamID { get; set; }
@@ -66,28 +64,39 @@ namespace Conflicted.Model
                         return $"https://steamcommunity.com/sharedfiles/filedetails/?id={SteamID}";
 
                     default:
-                        return null;
+                        return "https://www.google.com";
                 }
             }
         }
 
-        public IReadOnlyList<string> Files => files;
-        public IReadOnlyList<string> Elements => elements;
+        public IReadOnlyList<ModFile> Files => files;
 
-        [OnDeserialized]
-        public void ReadFiles()
+        public override string ToString()
         {
-            files = Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories).Select(file => file.Remove(0, DirPath.Length + 1)).ToList();
+            return DisplayName;
         }
 
-        public void ReadElements()
+        public override bool Equals(object obj)
         {
-            foreach (var file in Directory.GetFiles(DirPath, "*.txt", SearchOption.AllDirectories))
-            {
-                string directory = new DirectoryInfo(file).Name;
-                string text = File.ReadAllText(file);
+            return obj is Mod ? Equals((Mod)obj) : false;
+        }
 
-                throw new NotImplementedException();
+        public override int GetHashCode()
+        {
+            return ID.GetHashCode();
+        }
+
+        public bool Equals(Mod other)
+        {
+            return ID.Equals(other.ID);
+        }
+
+        [OnDeserialized]
+        private void ReadFiles(StreamingContext context)
+        {
+            foreach (var path in Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories))
+            {
+                files.Add(new ModFile(this, path));
             }
         }
     }

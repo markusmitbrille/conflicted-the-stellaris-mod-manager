@@ -4,16 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Conflicted"
+        xmlns:controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
         xmlns:ViewModel="clr-namespace:Conflicted.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="900" Width="1600" MinHeight="450" MinWidth="900">
     <Window.DataContext>
         <ViewModel:MainWindowViewModel/>
     </Window.DataContext>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="Open _Mod Registry" Command="{Binding OpenModRegistry}"/>
+                <MenuItem Header="Open _Mod Registry" Command="{Binding OpenModRegistryCommand}"/>
                 <MenuItem Header="Open _Game Data" Command="{Binding OpenGameDataCommand}"/>
                 <MenuItem Header="_Save Game Data" Command="{Binding SaveGameDataCommand}"/>
             </MenuItem>
@@ -21,36 +22,79 @@
                 <MenuItem Header="_Options" Command="{Binding OpenOptionsCommand}"/>
             </MenuItem>
         </Menu>
-        <DockPanel Margin="5">
-            <DockPanel DockPanel.Dock="Left" Margin="0 0 5 0" Width="200">
-                <StackPanel DockPanel.Dock="Right" Margin="5 0 0 0" VerticalAlignment="Center">
-                    <Button Command="{Binding MoveModTopCommand}" Width="20" Height="20">
+        <Grid DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Stretch">
+            <ProgressBar Height="20" Value="{Binding Cache.DoneMods}" Minimum="0" Maximum="{Binding Cache.CountMods}"/>
+        </Grid>
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="300"/>
+                <ColumnDefinition Width="5*" MinWidth="500"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0" Margin="0 0 5 0">
+                <StackPanel DockPanel.Dock="Right"
+                            Margin="5 0 0 0"
+                            Width="40"
+                            VerticalAlignment="Center"
+                            TextBlock.FontSize="30">
+                    <Button Command="{Binding MoveModTopCommand}">
                         <TextBlock Text="&#11121;"/>
                     </Button>
-                    <Button Command="{Binding MoveModUpCommand}" Width="20" Height="20" Margin="0 5 0 0">
+                    <Button Command="{Binding MoveModUpCommand}" Margin="0 5 0 0">
                         <TextBlock Text="&#11105;"/>
                     </Button>
-                    <Button Command="{Binding MoveModDownCommand}" Width="20" Height="20" Margin="0 5 0 0">
+                    <Button Command="{Binding MoveModDownCommand}" Margin="0 5 0 0">
                         <TextBlock Text="&#11107;"/>
                     </Button>
-                    <Button Command="{Binding MoveModBottomCommand}" Width="20" Height="20" Margin="0 5 0 0">
+                    <Button Command="{Binding MoveModBottomCommand}" Margin="0 5 0 0">
                         <TextBlock Text="&#11123;"/>
                     </Button>
                 </StackPanel>
                 <DataGrid 
+                    x:Name="mods"
                     ItemsSource="{Binding Mods}"
                     SelectedItem="{Binding SelectedMod}"
+                    HeadersVisibility="None"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto"
+                    SelectionMode="Single"
+                    SelectionUnit="FullRow"
+                    AutoGenerateColumns="False"
                     CanUserAddRows="False"
                     CanUserDeleteRows="False"
                     CanUserSortColumns="False"
                     CanUserReorderColumns="False"
-                    CanUserResizeRows="False">
-                    
+                    CanUserResizeRows="False"
+                    HorizontalGridLinesBrush="LightGray"
+                    GridLinesVisibility="Horizontal"
+                    SelectionChanged="Mods_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image
+                                        Width="20"
+                                        Height="20"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Source="{Binding ThumbnailUrl, Mode=OneWay}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="*" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Text="{Binding DisplayName, Mode=OneWay}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
-            <TabControl>
+            <TabControl Grid.Column="2">
                 <TabItem Header="Description">
-                    <WebBrowser Source="{Binding SelectedMod.WebPageUrl, FallbackValue='www.google.com'}"/>
+                    <controls:WebView x:Name="browser"/>
                 </TabItem>
                 <TabItem Header="File Conflicts">
                     <Grid>
@@ -59,41 +103,111 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <DockPanel Grid.Row="0">
-                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <StackPanel DockPanel.Dock="Top"
+                                        Margin="0 5"
+                                        Orientation="Horizontal"
+                                        TextBlock.FontFamily="Consolas"
+                                        TextBlock.FontSize="20">
                                 <TextBlock Text="Overwrites "/>
-                                <TextBlock Text="{Binding CountFilesOverwrittenFrom, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding ModsWithOverwrittenFilesCount, FallbackValue=0}"/>
                                 <TextBlock Text=" Mods for a total of "/>
-                                <TextBlock Text="{Binding CountFileConflictsCreated, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding OverwrittenFilesCount, FallbackValue=0}"/>
                                 <TextBlock Text=" Conflicts!"/>
                             </StackPanel>
                             <DataGrid
-                                ItemsSource="{Binding FileConflictsCreated}"
-                                SelectedItem="{Binding SelectedCreatedFileConflict}"
+                                ItemsSource="{Binding OverwrittenFiles}"
+                                HeadersVisibility="None"
+                                HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Visible"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                AutoGenerateColumns="False"
                                 CanUserAddRows="False"
                                 CanUserDeleteRows="False"
                                 CanUserSortColumns="False"
                                 CanUserReorderColumns="False"
-                                CanUserResizeRows="False">
-
+                                CanUserResizeRows="False"
+                                HorizontalGridLinesBrush="LightGray"
+                                GridLinesVisibility="Horizontal">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="300" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image
+                                                        Width="20"
+                                                        Height="20"
+                                                        Margin="0 0 5 0"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Source="{Binding Mod.ThumbnailUrl, Mode=OneWay}"/>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding Mod.DisplayName, Mode=OneWay}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding ID, Mode=OneWay}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
                             </DataGrid>
                         </DockPanel>
                         <DockPanel Grid.Row="1">
-                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <StackPanel DockPanel.Dock="Top"
+                                        Margin="0 5"
+                                        Orientation="Horizontal"
+                                        TextBlock.FontFamily="Consolas"
+                                        TextBlock.FontSize="20">
                                 <TextBlock Text="Overwritten by "/>
-                                <TextBlock Text="{Binding CountFilesOverwrittenBy, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding ModsWithOverwritingFilesCount, FallbackValue=0}"/>
                                 <TextBlock Text=" Mods for a total of "/>
-                                <TextBlock Text="{Binding CountFileConflictsSuffered, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding OverwritingFilesCount, FallbackValue=0}"/>
                                 <TextBlock Text=" Conflicts!"/>
                             </StackPanel>
                             <DataGrid 
-                                ItemsSource="{Binding FileConflictsSuffered}"
-                                SelectedItem="{Binding SelectedSufferedFileConflict}"
+                                ItemsSource="{Binding OverwritingFiles}"
+                                HeadersVisibility="None"
+                                HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Visible"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                AutoGenerateColumns="False"
                                 CanUserAddRows="False"
                                 CanUserDeleteRows="False"
                                 CanUserSortColumns="False"
                                 CanUserReorderColumns="False"
-                                CanUserResizeRows="False">
-
+                                CanUserResizeRows="False"
+                                HorizontalGridLinesBrush="LightGray"
+                                GridLinesVisibility="Horizontal">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="300" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image
+                                                        Width="20"
+                                                        Height="20"
+                                                        Margin="0 0 5 0"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Source="{Binding Mod.ThumbnailUrl, Mode=OneWay}"/>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding Mod.DisplayName, Mode=OneWay}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding ID, Mode=OneWay}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
                             </DataGrid>
                         </DockPanel>
                     </Grid>
@@ -105,46 +219,118 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <DockPanel Grid.Row="0">
-                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <StackPanel DockPanel.Dock="Top"
+                                        Margin="0 5"
+                                        Orientation="Horizontal"
+                                        TextBlock.FontFamily="Consolas"
+                                        TextBlock.FontSize="20">
                                 <TextBlock Text="Overwrites "/>
-                                <TextBlock Text="{Binding CountElementsOverwrittenFrom, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding ModsWithOverwrittenElementsCount, FallbackValue=0}"/>
                                 <TextBlock Text=" Mods for a total of "/>
-                                <TextBlock Text="{Binding CountElementConflictsCreated, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding OverwrittenElementsCount, FallbackValue=0}"/>
                                 <TextBlock Text=" Conflicts!"/>
                             </StackPanel>
-                            <DataGrid 
-                                ItemsSource="{Binding ElementConflictsCreated}"
-                                SelectedItem="{Binding SelectedCreatedElementConflict}"
+                            <DataGrid
+                                ItemsSource="{Binding OverwrittenElements}"
+                                HeadersVisibility="None"
+                                HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Visible"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                AutoGenerateColumns="False"
                                 CanUserAddRows="False"
                                 CanUserDeleteRows="False"
                                 CanUserSortColumns="False"
                                 CanUserReorderColumns="False"
-                                CanUserResizeRows="False">
-
+                                CanUserResizeRows="False"
+                                HorizontalGridLinesBrush="LightGray"
+                                GridLinesVisibility="Horizontal">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="300" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image
+                                                        Width="20"
+                                                        Height="20"
+                                                        Margin="0 0 5 0"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Source="{Binding File.Mod.ThumbnailUrl, Mode=OneWay}"/>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding File.Mod.DisplayName, Mode=OneWay}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding Name, Mode=OneWay}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
                             </DataGrid>
                         </DockPanel>
                         <DockPanel Grid.Row="1">
-                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <StackPanel DockPanel.Dock="Top"
+                                        Margin="0 5"
+                                        Orientation="Horizontal"
+                                        TextBlock.FontFamily="Consolas"
+                                        TextBlock.FontSize="20">
                                 <TextBlock Text="Overwritten by "/>
-                                <TextBlock Text="{Binding CountElementsOverwrittenBy, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding ModsWithOverwritingElementsCount, FallbackValue=0}"/>
                                 <TextBlock Text=" Mods for a total of "/>
-                                <TextBlock Text="{Binding CountElementConflictsSuffered, FallbackValue=0}"/>
+                                <TextBlock Text="{Binding OverwritingElementsCount, FallbackValue=0}"/>
                                 <TextBlock Text=" Conflicts!"/>
                             </StackPanel>
-                            <DataGrid 
-                                ItemsSource="{Binding ElementConflictsSuffered}"
-                                SelectedItem="{Binding SelectedSufferedElementConflict}"
+                            <DataGrid
+                                ItemsSource="{Binding OverwritingElements}"
+                                HeadersVisibility="None"
+                                HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Visible"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                AutoGenerateColumns="False"
                                 CanUserAddRows="False"
                                 CanUserDeleteRows="False"
                                 CanUserSortColumns="False"
                                 CanUserReorderColumns="False"
-                                CanUserResizeRows="False">
-
+                                CanUserResizeRows="False"
+                                HorizontalGridLinesBrush="LightGray"
+                                GridLinesVisibility="Horizontal">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="300" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image
+                                                        Width="20"
+                                                        Height="20"
+                                                        Margin="0 0 5 0"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Source="{Binding File.Mod.ThumbnailUrl, Mode=OneWay}"/>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding File.Mod.DisplayName, Mode=OneWay}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*" IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding Name, Mode=OneWay}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
                             </DataGrid>
                         </DockPanel>
                     </Grid>
                 </TabItem>
             </TabControl>
-        </DockPanel>
+            <GridSplitter Grid.Column="0" Width="5" HorizontalAlignment="Right" VerticalAlignment="Stretch" Background="Transparent"/>
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left" VerticalAlignment="Stretch" Background="Transparent"/>
+        </Grid>
     </DockPanel>
 </Window>
