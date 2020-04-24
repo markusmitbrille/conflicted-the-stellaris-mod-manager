@@ -1,0 +1,57 @@
+﻿<DataGrid x:Class="Conflicted.View.ModsDataGrid"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:vmdt="clr-namespace:Conflicted.ViewModel.DesignTime"
+          d:DesignHeight="900"
+          d:DesignWidth="1600"
+          d:DataContext="{d:DesignInstance Type=vmdt:Mods, IsDesignTimeCreatable=False}"
+          mc:Ignorable="d"
+          ItemsSource="{Binding}"
+          IsReadOnly="True"
+          AutoGenerateColumns="False"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          CanUserReorderColumns="False"
+          CanUserResizeRows="False"
+          CanUserSortColumns="False"
+          HeadersVisibility="None"
+          HorizontalGridLinesBrush="LightGray"
+          VerticalGridLinesBrush="LightGray"
+          SelectionMode="Single"
+          SelectionUnit="FullRow"
+          HorizontalScrollBarVisibility="Disabled"
+          VerticalScrollBarVisibility="Visible">
+    <DataGrid.Columns>
+        <DataGridTemplateColumn Width="*">
+            <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5 0"
+                                Orientation="Horizontal">
+                        <Image Width="20"
+                               Height="20"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Source="{Binding Path=ThumbnailUrl}" />
+                        <TextBlock Margin="5 0 0 0"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Text="{Binding Path=DisplayName}" />
+                    </StackPanel>
+                </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn Width="auto">
+            <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                    <TextBlock Margin="5 0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Foreground="{Binding Path=ConflictCountBrush}"
+                               Text="{Binding Path=ConflictCount}" />
+                </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+    </DataGrid.Columns>
+</DataGrid>

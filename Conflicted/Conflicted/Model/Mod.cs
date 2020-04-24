@@ -1,119 +1,89 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Conflicted.Model
 {
-    [DataContract]
-    internal class Mod : IEquatable<Mod>
+    internal class Mod
     {
-        [DataMember(Name = "steamId")]
-        public long SteamID { get; set; }
+        public long? SteamID { get; }
+        public string DisplayName { get; }
+        public ReadOnlyCollection<string> Tags { get; }
+        public long? TimeUpdated { get; }
+        public string Source { get; }
+        public string ThumbnailUrl { get; }
+        public string DirPath { get; }
+        public string Status { get; }
+        public string ID { get; }
+        public string GameRegistryId { get; }
+        public string RequiredVersion { get; }
+        public string ArchivePath { get; }
+        public string Cause { get; }
+        public string ThumbnailPath { get; }
 
-        [DataMember(Name = "displayName")]
-        public string DisplayName { get; set; }
+        public Modlist Modlist { get; }
 
-        [DataMember(Name = "tags")]
-        public List<string> Tags { get; set; }
+        private IEnumerable<ModFile> files;
+        public IEnumerable<ModFile> Files => files ?? (files = Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories).Select(path => new ModFile(this, path)).ToArray());
 
-        [DataMember(Name = "timeUpdated")]
-        public long TimeUpdated { get; set; }
+        private IEnumerable<ModElement> elements;
+        public IEnumerable<ModElement> Elements => elements ?? (elements = Files.SelectMany(file => file.Elements).ToArray());
 
-        [DataMember(Name = "source")]
-        public string Source { get; set; }
-
-        [DataMember(Name = "thumbnailUrl")]
-        public string ThumbnailUrl { get; set; }
-
-        [DataMember(Name = "dirPath")]
-        public string DirPath { get; set; }
-
-        [DataMember(Name = "status")]
-        public string Status { get; set; }
-
-        [DataMember(Name = "id")]
-        public string ID { get; set; }
-
-        [DataMember(Name = "gameRegistryId")]
-        public string GameRegistryId { get; set; }
-
-        [DataMember(Name = "requiredVersion")]
-        public string RequiredVersion { get; set; }
-
-        [DataMember(Name = "archivePath")]
-        public string ArchivePath { get; set; }
-
-        [DataMember(Name = "cause")]
-        public string Cause { get; set; }
-
-        [DataMember(Name = "thumbnailPath")]
-        public string ThumbnailPath { get; set; }
-
-        public string WebPageUrl
+        public Mod(Modlist modlist, ModRegistryEntry entry)
         {
-            get
-            {
-                switch (Source)
-                {
-                    case SourceSteam:
-                        return $"https://steamcommunity.com/sharedfiles/filedetails/?id={SteamID}";
+            Modlist = modlist ?? throw new ArgumentNullException(nameof(modlist));
 
-                    default:
-                        return "https://www.google.com";
-                }
+            if (entry is null)
+            {
+                throw new ArgumentNullException(nameof(entry));
             }
+
+            SteamID = entry.SteamID;
+            DisplayName = entry.DisplayName;
+            Tags = entry.Tags?.AsReadOnly();
+            TimeUpdated = entry.TimeUpdated;
+            Source = entry.Source;
+            ThumbnailUrl = entry.ThumbnailUrl;
+            DirPath = entry.DirPath;
+            Status = entry.Status;
+            ID = entry.ID;
+            GameRegistryId = entry.GameRegistryId;
+            RequiredVersion = entry.RequiredVersion;
+            ArchivePath = entry.ArchivePath;
+            Cause = entry.Cause;
+            ThumbnailPath = entry.ThumbnailPath;
         }
 
-        public IEnumerable<ModFile> Files { get; private set; }
-        public IEnumerable<ModElement> Elements { get; private set; }
+        public void MoveTop() => Modlist.MoveTop(this);
 
-        private const string SourceSteam = "steam";
+        public void MoveUp() => Modlist.MoveUp(this);
+
+        public void MoveDown() => Modlist.MoveDown(this);
+
+        public void MoveBottom() => Modlist.MoveBottom(this);
 
         public override string ToString()
         {
             return DisplayName;
         }
 
-        public override bool Equals(object obj)
+        public class OrderComparer : Comparer<Mod>
         {
-            return obj is Mod ? Equals((Mod)obj) : false;
-        }
+            public static OrderComparer Instance => instance ?? (instance = new OrderComparer());
+            private static OrderComparer instance;
 
-        public override int GetHashCode()
-        {
-            return ID.GetHashCode();
-        }
-
-        public bool Equals(Mod other)
-        {
-            return ID.Equals(other.ID);
-        }
-
-        [OnDeserialized]
-        private void Initialize(StreamingContext context)
-        {
-            Files = ReadFiles().ToList();
-            Elements = ReadElements().ToList();
-        }
-
-        private IEnumerable<ModFile> ReadFiles()
-        {
-            foreach (var path in Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories))
+            private OrderComparer()
             {
-                yield return new ModFile(this, path);
             }
-        }
 
-        private IEnumerable<ModElement> ReadElements()
-        {
-            foreach (var file in Files)
+            public override int Compare(Mod x, Mod y)
             {
-                foreach (var element in file.Elements)
-                {
-                    yield return element;
-                }
+                int xIndex = x.Modlist.Order.IndexOf(x.ID);
+                int yIndex = y.Modlist.Order.IndexOf(y.ID);
+
+                return xIndex == yIndex ? 0 : xIndex == -1 ? -1 : yIndex == -1 ? 1 : xIndex - yIndex;
             }
         }
     }

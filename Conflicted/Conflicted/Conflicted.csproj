@@ -63,6 +63,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\DesignTime\ModElements.cs" />
+    <Compile Include="ViewModel\DesignTime\ModFiles.cs" />
+    <Compile Include="ViewModel\DesignTime\Mods.cs" />
+    <Compile Include="View\ModElementsDataGrid.xaml.cs">
+      <DependentUpon>ModElementsDataGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ModFilesDataGrid.xaml.cs">
+      <DependentUpon>ModFilesDataGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ModsDataGrid.xaml.cs">
+      <DependentUpon>ModsDataGrid.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -73,17 +85,35 @@
     </Compile>
     <Compile Include="Model\GameData.cs" />
     <Compile Include="Model\Mod.cs" />
+    <Compile Include="Model\ModRegistryEntry.cs" />
     <Compile Include="Model\ModElement.cs" />
     <Compile Include="Model\ModFile.cs" />
+    <Compile Include="Model\Modlist.cs" />
     <Compile Include="Model\ModRegistry.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Compile Include="ViewModel\DataCache.cs" />
+    <Compile Include="ViewModel\ModElementViewModel.cs" />
+    <Compile Include="ViewModel\ModelViewModel.cs" />
+    <Compile Include="ViewModel\ModFileViewModel.cs" />
+    <Compile Include="ViewModel\ModlistViewModel.cs" />
+    <Compile Include="ViewModel\ModViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\ModElementsDataGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ModFilesDataGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ModsDataGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

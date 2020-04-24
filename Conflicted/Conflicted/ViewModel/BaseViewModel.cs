@@ -3,18 +3,14 @@ using System.Runtime.CompilerServices;
 
 namespace Conflicted.ViewModel
 {
-    internal class BaseViewModel : INotifyPropertyChanged
+    internal abstract class BaseViewModel : INotifyPropertyChanged
     {
-        #region Events
-
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Events
-
-        #region Methods
+        public BaseViewModel()
+        {
+        }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        #endregion Methods
     }
 }

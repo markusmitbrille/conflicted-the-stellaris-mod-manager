@@ -1,6 +1,4 @@
-﻿using Conflicted.Model;
-using Conflicted.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,23 +16,13 @@ using System.Windows.Shapes;
 namespace Conflicted.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ModsDataGrid.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ModsDataGrid : DataGrid
     {
-        public MainWindow()
+        public ModsDataGrid()
         {
             InitializeComponent();
-        }
-
-        private void Mods_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (!(dgMods.SelectedItem is ModViewModel mod))
-            {
-                return;
-            }
-
-            browser.Navigate(mod.WebPageUrl);
         }
     }
 }

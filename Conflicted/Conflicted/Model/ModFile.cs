@@ -1,20 +1,44 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conflicted.Model
 {
-    internal class ModFile : IEquatable<ModFile>
+    internal class ModFile
     {
-        public Mod Mod { get; }
         public string Path { get; }
         public string ID { get; }
         public string Name { get; }
         public string Extension { get; }
         public string Directory { get; }
         public string Text { get; }
-        public IEnumerable<ModElement> Elements { get; }
+
+        public Mod Mod { get; }
+
+        private IEnumerable<ModElement> elements;
+        public IEnumerable<ModElement> Elements => elements ?? (elements = Interpret().ToArray());
+
+        private IEnumerable<ModFile> conflicts;
+        public IEnumerable<ModFile> Conflicts
+        {
+            get
+            {
+                return conflicts ?? (conflicts = Mod.Modlist.FileConflicts.Where(group => group.Key == ID)
+                    .SelectMany(group => group)
+                    .Where(file => file != this)
+                    .ToArray());
+            }
+        }
+
+        private IEnumerable<ModFile> overwritten;
+        public IEnumerable<ModFile> Overwritten => overwritten ?? (overwritten = Conflicts.Where(file => Mod.OrderComparer.Instance.Compare(file.Mod, Mod) < 0).ToArray());
+
+        private IEnumerable<ModFile> overwriting;
+        public IEnumerable<ModFile> Overwriting => overwriting ?? (overwriting = Conflicts.Where(file => Mod.OrderComparer.Instance.Compare(file.Mod, Mod) > 0).ToArray());
 
         public ModFile(Mod mod, string path)
         {
@@ -25,9 +49,7 @@ namespace Conflicted.Model
             Name = System.IO.Path.GetFileNameWithoutExtension(path);
             Extension = System.IO.Path.GetExtension(path);
             Directory = new DirectoryInfo(path).Parent.Name;
-
-            Text = ReadText();
-            Elements = ReadElements().ToList();
+            Text = Extension == ".txt" ? File.ReadAllText(path) : null;
         }
 
         public override string ToString()
@@ -35,36 +57,7 @@ namespace Conflicted.Model
             return Name;
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is ModFile ? Equals((ModFile)obj) : false;
-        }
-
-        public override int GetHashCode()
-        {
-            return ID.GetHashCode();
-        }
-
-        public bool Equals(ModFile other)
-        {
-            return ID.Equals(other.ID);
-        }
-
-        private string ReadText()
-        {
-            if (Extension == ".txt")
-            {
-                return File.ReadAllText(Path);
-            }
-            if (Extension == ".gfx")
-            {
-                return File.ReadAllText(Path);
-            }
-
-            return string.Empty;
-        }
-
-        private IEnumerable<ModElement> ReadElements()
+        private IEnumerable<ModElement> Interpret()
         {
             if (Extension != ".txt")
             {
@@ -90,7 +83,7 @@ namespace Conflicted.Model
 
                 case "special_projects":
                     return InterpretKeyedBlock(0, "special_projects", "key");
-                
+
                 case "section_templates":
                     return InterpretKeyedBlock(0, "section_templates", "key");
 
