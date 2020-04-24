@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Conflicted.Properties;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +23,7 @@ namespace Conflicted.Model
             {
                 return fileConflicts ?? (fileConflicts = mods
                     .SelectMany(mod => mod.Files)
+                    .Where(file => !Settings.Default.IgnoredFiles.Contains(file.NameWithExtension))
                     .GroupBy(file => file.ID)
                     .Where(group => group.Count() > 1)
                     .ToArray());
