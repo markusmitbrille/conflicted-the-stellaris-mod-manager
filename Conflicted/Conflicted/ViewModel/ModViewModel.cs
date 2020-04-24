@@ -30,33 +30,64 @@ namespace Conflicted.ViewModel
         public ModlistViewModel Modlist => modlist ?? (modlist = ModlistViewModel.Create(model.Modlist));
 
         private IEnumerable<ModFileViewModel> files;
-        public IEnumerable<ModFileViewModel> Files => files ?? (files = model.Files.Select(file => ModFileViewModel.Create(file)).ToArray());
+        public IEnumerable<ModFileViewModel> Files
+        {
+            get
+            {
+                return files ?? (files = model.Files
+                    .Select(file => ModFileViewModel.Create(file))
+                    .OrderByDescending(file => file.ConflictCount)
+                    .ThenBy(file => file.ID)
+                    .ToArray());
+            }
+        }
 
         private int? fileCount;
         public int? FileCount => fileCount ?? (fileCount = Files.Count());
 
-        private IEnumerable<ModElementViewModel> elements;
-        public IEnumerable<ModElementViewModel> Elements => elements ?? (elements = model.Elements.Select(element => ModElementViewModel.Create(element)).ToArray());
-
-        private int? elementCount;
-        public int? ElementCount => elementCount ?? (elementCount = Elements.Count());
-
-        private int? conflictCount;
-        public int? ConflictCount
+        private int? fileConflictCount;
+        public int? FileConflictCount
         {
             get
             {
-                return conflictCount ?? (conflictCount =
-                    model.Modlist.FileConflicts
+                return fileConflictCount ?? (fileConflictCount = model.Modlist.FileConflicts
                     .SelectMany(group => group)
                     .Where(file => file.Mod == model)
-                    .Count() +
-                    model.Modlist.ElementConflicts
+                    .Count());
+            }
+        }
+
+        private IEnumerable<ModElementViewModel> elements;
+        public IEnumerable<ModElementViewModel> Elements
+        {
+            get
+            {
+                return elements ?? (elements = model.Elements
+                    .Select(element => ModElementViewModel.Create(element))
+                    .OrderByDescending(element => element.ConflictCount)
+                    .ThenBy(element => element.File.ID)
+                    .ThenBy(element => element.ID)
+                    .ToArray());
+            }
+        }
+
+        private int? elementConflictCount;
+        public int? ElementConflictCount
+        {
+            get
+            {
+                return elementConflictCount ?? (elementConflictCount = model.Modlist.ElementConflicts
                     .SelectMany(group => group)
                     .Where(element => element.Mod == model)
                     .Count());
             }
         }
+
+        private int? elementCount;
+        public int? ElementCount => elementCount ?? (elementCount = Elements.Count());
+
+        private int? conflictCount;
+        public int? ConflictCount => conflictCount ?? (conflictCount = FileConflictCount + ElementConflictCount);
 
         private Brush conflictCountBrush;
         public Brush ConflictCountBrush => conflictCountBrush ?? (conflictCountBrush = ConflictCount > 0 ? Brushes.Red : Brushes.Black);

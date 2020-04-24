@@ -20,7 +20,8 @@ namespace Conflicted.Model
         {
             get
             {
-                return fileConflicts ?? (fileConflicts = mods.SelectMany(mod => mod.Files)
+                return fileConflicts ?? (fileConflicts = mods
+                    .SelectMany(mod => mod.Files)
                     .GroupBy(file => file.ID)
                     .Where(group => group.Count() > 1)
                     .ToArray());
@@ -33,8 +34,8 @@ namespace Conflicted.Model
             get
             {
 
-                return elementConflicts ?? (elementConflicts = mods.SelectMany(mod => mod.Files)
-                    .SelectMany(file => file.Elements)
+                return elementConflicts ?? (elementConflicts = mods
+                    .SelectMany(mod => mod.Elements)
                     .GroupBy(element => element.ID)
                     .Where(group => group.Count() > 1)
                     .ToArray());

@@ -20,23 +20,18 @@ namespace Conflicted.Model
         {
             get
             {
-                return conflicts ?? (conflicts = File.Mod.Modlist.ElementConflicts.Where(group => group.Key == ID)
+                return conflicts ?? (conflicts = File.Mod.Modlist.ElementConflicts
+                    .Where(group => group.Key == ID)
                     .SelectMany(group => group)
                     .Where(element => element != this)
                     .ToArray());
             }
         }
 
-        private IEnumerable<ModElement> overwritten;
-        public IEnumerable<ModElement> Overwritten => overwritten ?? (overwritten = Conflicts.Where(element => Mod.OrderComparer.Instance.Compare(element.Mod, Mod) < 0).ToArray());
-
-        private IEnumerable<ModElement> overwriting;
-        public IEnumerable<ModElement> Overwriting => overwriting ?? (overwriting = Conflicts.Where(element => Mod.OrderComparer.Instance.Compare(element.Mod, Mod) > 0).ToArray());
-
-        public ModElement(ModFile file, string name, string text)
+        public ModElement(ModFile file, string id, string text)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
-            ID = name ?? throw new ArgumentNullException(nameof(name));
+            ID = id ?? throw new ArgumentNullException(nameof(id));
             Text = text ?? throw new ArgumentNullException(nameof(text));
         }
 

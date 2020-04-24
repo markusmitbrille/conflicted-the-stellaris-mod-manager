@@ -20,10 +20,29 @@ namespace Conflicted.ViewModel
             get => selectedMod;
             set
             {
+                SelectedFile = null;
+                SelectedFileConflict = null;
+
+                SelectedElement = null;
+                SelectedElementConflict = null;
+
                 selectedMod = value;
+                
                 OnPropertyChanged();
+
+                OnPropertyChanged(nameof(FileTabHeader));
+                OnPropertyChanged(nameof(ElementTabHeader));
+
+                OnPropertyChanged(nameof(FileTabVisibility));
+                OnPropertyChanged(nameof(ElementTabVisibility));
             }
         }
+
+        public string FileTabHeader => SelectedMod == null ? null : $"{SelectedMod.FileCount} {(SelectedMod.FileCount > 1 ? "Files" : "File")}{(SelectedMod.FileConflictCount > 0 ? $" with {SelectedMod.FileConflictCount} {(SelectedMod.FileConflictCount > 1 ? "Conflicts" : "Conflict")}" : null)}";
+        public string ElementTabHeader => SelectedMod == null ? null : $"{SelectedMod.ElementCount} {(SelectedMod.ElementCount > 1 ? "Elements" : "Element")}{(SelectedMod.ElementConflictCount > 0 ? $" with {SelectedMod.ElementConflictCount} {(SelectedMod.ElementConflictCount > 1 ? "Conflicts" : "Conflict")}" : null)}";
+
+        public Visibility FileTabVisibility => SelectedMod == null ? Visibility.Collapsed : SelectedMod.FileCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ElementTabVisibility => SelectedMod == null ? Visibility.Collapsed : SelectedMod.ElementCount > 0 ? Visibility.Visible : Visibility.Collapsed;
 
         private ModFileViewModel selectedFile;
         public ModFileViewModel SelectedFile
@@ -32,26 +51,19 @@ namespace Conflicted.ViewModel
             set
             {
                 selectedFile = value;
+                
                 OnPropertyChanged();
-
-                if (value == null)
-                {
-                    FileConflictsVisibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    FileConflictsVisibility = Visibility.Visible;
-                }
+                OnPropertyChanged(nameof(FileConflictRowHeight));
             }
         }
 
-        private Visibility fileConflictsVisibility = Visibility.Collapsed;
-        public Visibility FileConflictsVisibility
+        private ModFileViewModel selectedFileConflict;
+        public ModFileViewModel SelectedFileConflict
         {
-            get => fileConflictsVisibility;
+            get => selectedFileConflict;
             set
             {
-                fileConflictsVisibility = value;
+                selectedFileConflict = value;
                 OnPropertyChanged();
             }
         }
@@ -63,9 +75,25 @@ namespace Conflicted.ViewModel
             set
             {
                 selectedElement = value;
+                
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ElementConflictRowHeight));
+            }
+        }
+
+        private ModElementViewModel selectedElementConflict;
+        public ModElementViewModel SelectedElementConflict
+        {
+            get => selectedElementConflict;
+            set
+            {
+                selectedElementConflict = value;
                 OnPropertyChanged();
             }
         }
+
+        public GridLength FileConflictRowHeight => SelectedFile == null ? new GridLength(0, GridUnitType.Star) : SelectedFile.ConflictCount > 0 ? new GridLength(1, GridUnitType.Star) : new GridLength(0, GridUnitType.Star);
+        public GridLength ElementConflictRowHeight => SelectedElement == null ? new GridLength(0, GridUnitType.Star) : SelectedElement.ConflictCount > 0 ? new GridLength(1, GridUnitType.Star) : new GridLength(0, GridUnitType.Star);
 
         private RelayCommand openOptionsCommand;
         public RelayCommand OpenOptionsCommand => openOptionsCommand ?? (openOptionsCommand = new RelayCommand(ExecuteOpenOptions));

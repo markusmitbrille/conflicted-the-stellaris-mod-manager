@@ -29,18 +29,6 @@ namespace Conflicted.ViewModel
         private Brush conflictCountBrush;
         public Brush ConflictCountBrush => conflictCountBrush ?? (conflictCountBrush = ConflictCount > 0 ? Brushes.Red : Brushes.Black);
 
-        private IEnumerable<ModElementViewModel> overwritten;
-        public IEnumerable<ModElementViewModel> Overwritten => overwritten ?? (overwritten = model.Overwritten.Select(element => Create(element)).ToArray());
-
-        private int? overwrittenCount;
-        public int? OverwrittenCount => overwrittenCount ?? (overwrittenCount = Overwritten.Count());
-
-        private IEnumerable<ModElementViewModel> overwriting;
-        public IEnumerable<ModElementViewModel> Overwriting => overwriting ?? (overwriting = model.Overwriting.Select(element => Create(element)).ToArray());
-
-        private int? overwritingCount;
-        public int? OverwritingCount => overwritingCount ?? (overwritingCount = Overwriting.Count());
-
         private ModElementViewModel(ModElement model) : base(model)
         {
             instances[model] = this;

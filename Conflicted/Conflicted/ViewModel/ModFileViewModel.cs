@@ -36,18 +36,6 @@ namespace Conflicted.ViewModel
         private Brush conflictCountBrush;
         public Brush ConflictCountBrush => conflictCountBrush ?? (conflictCountBrush = ConflictCount > 0 ? Brushes.Red : Brushes.Black);
 
-        private IEnumerable<ModFileViewModel> overwritten;
-        public IEnumerable<ModFileViewModel> Overwritten => overwritten ?? (overwritten = model.Overwritten.Select(file => Create(file)).ToArray());
-
-        private int? overwrittenCount;
-        public int? OverwrittenCount => overwrittenCount ?? (overwrittenCount = Overwritten.Count());
-
-        private IEnumerable<ModFileViewModel> overwriting;
-        public IEnumerable<ModFileViewModel> Overwriting => overwriting ?? (overwriting = model.Overwriting.Select(file => Create(file)).ToArray());
-
-        private int? overwritingCount;
-        public int? OverwritingCount => overwritingCount ?? (overwritingCount = Overwriting.Count());
-
         private ModFileViewModel(ModFile model) : base(model)
         {
             instances[model] = this;

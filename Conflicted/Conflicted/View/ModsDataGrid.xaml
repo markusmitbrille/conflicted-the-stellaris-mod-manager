@@ -17,28 +17,40 @@
           CanUserResizeRows="False"
           CanUserSortColumns="False"
           HeadersVisibility="None"
+          BorderBrush="Gray"
           HorizontalGridLinesBrush="LightGray"
           VerticalGridLinesBrush="LightGray"
           SelectionMode="Single"
           SelectionUnit="FullRow"
           HorizontalScrollBarVisibility="Disabled"
           VerticalScrollBarVisibility="Visible">
+    <DataGrid.CellStyle>
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness"
+                    Value="0" />
+        </Style>
+    </DataGrid.CellStyle>
     <DataGrid.Columns>
         <DataGridTemplateColumn Width="*">
             <DataGridTemplateColumn.CellTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="5 0"
-                                Orientation="Horizontal">
-                        <Image Width="20"
+                    <Grid Margin="5 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0"
+                               Width="20"
                                Height="20"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                Source="{Binding Path=ThumbnailUrl}" />
-                        <TextBlock Margin="5 0 0 0"
+                        <TextBlock Grid.Column="1"
+                                   Margin="5 0 0 0"
                                    VerticalAlignment="Center"
                                    TextTrimming="CharacterEllipsis"
                                    Text="{Binding Path=DisplayName}" />
-                    </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>

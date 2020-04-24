@@ -13,6 +13,7 @@ namespace Conflicted.Model
         public string Path { get; }
         public string ID { get; }
         public string Name { get; }
+        public string NameWithExtension { get; }
         public string Extension { get; }
         public string Directory { get; }
         public string Text { get; }
@@ -34,12 +35,6 @@ namespace Conflicted.Model
             }
         }
 
-        private IEnumerable<ModFile> overwritten;
-        public IEnumerable<ModFile> Overwritten => overwritten ?? (overwritten = Conflicts.Where(file => Mod.OrderComparer.Instance.Compare(file.Mod, Mod) < 0).ToArray());
-
-        private IEnumerable<ModFile> overwriting;
-        public IEnumerable<ModFile> Overwriting => overwriting ?? (overwriting = Conflicts.Where(file => Mod.OrderComparer.Instance.Compare(file.Mod, Mod) > 0).ToArray());
-
         public ModFile(Mod mod, string path)
         {
             Mod = mod ?? throw new ArgumentNullException(nameof(mod));
@@ -47,6 +42,7 @@ namespace Conflicted.Model
 
             ID = path.Remove(0, mod.DirPath.Length + 1);
             Name = System.IO.Path.GetFileNameWithoutExtension(path);
+            NameWithExtension = System.IO.Path.GetFileName(path);
             Extension = System.IO.Path.GetExtension(path);
             Directory = new DirectoryInfo(path).Parent.Name;
             Text = Extension == ".txt" ? File.ReadAllText(path) : null;

@@ -15,10 +15,11 @@
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
-    <DockPanel Margin="5">
+    <DockPanel>
         <Menu DockPanel.Dock="Top"
               Margin="0 0 0 5">
-            <MenuItem Header="_File">
+            <MenuItem Header="_File"
+                      Padding="5 0">
                 <MenuItem Header="Open _Mod Registry"
                           Command="{Binding Path=Modlist.OpenModRegistryCommand}" />
                 <MenuItem Header="Open _Game Data"
@@ -26,28 +27,21 @@
                 <MenuItem Header="_Save Game Data"
                           Command="{Binding Path=Modlist.SaveGameDataCommand}" />
             </MenuItem>
-            <MenuItem Header="_Extras">
+            <MenuItem Header="_Extras"
+                      Padding="5 0">
                 <MenuItem Header="_Options"
                           Command="{Binding Path=OpenOptionsCommand}" />
             </MenuItem>
         </Menu>
-        <!--<Grid DockPanel.Dock="Bottom"
-              Margin="0 5 0 0"
-              HorizontalAlignment="Stretch">
-            <ProgressBar Height="20"
-                         Minimum="0"
-                         Maximum="{Binding Path=Modlist.Goal}"
-                         Value="{Binding Path=Modlist.Progress}" />
-        </Grid>-->
-        <Grid>
+        <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"
                                   MinWidth="300" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="5*"
                                   MinWidth="500" />
             </Grid.ColumnDefinitions>
-            <DockPanel Grid.Column="0"
-                       Margin="0 0 5 0">
+            <DockPanel Grid.Column="0">
                 <StackPanel DockPanel.Dock="Right"
                             Margin="5 0 0 0"
                             Width="40"
@@ -72,409 +66,67 @@
                 </StackPanel>
                 <v:ModsDataGrid x:Name="dgMods"
                                 ItemsSource="{Binding Path=Modlist.Mods}"
-                                SelectedItem="{Binding Path=SelectedMod}" />
+                                SelectedItem="{Binding Path=SelectedMod}"
+                                SelectionChanged="Mods_SelectionChanged" />
             </DockPanel>
-            <TabControl Grid.Column="1">
+            <TabControl Grid.Column="2">
                 <TabItem Header="Description">
                     <controls:WebView x:Name="browser" />
                 </TabItem>
-                <TabItem Header="Files">
+                <TabItem Visibility="{Binding Path=FileTabVisibility}"
+                         Header="{Binding Path=FileTabHeader}">
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"
-                                           MinHeight="350" />
-                            <RowDefinition Height="*"
-                                           MinHeight="350" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="{Binding Path=FileConflictRowHeight, Mode=OneWay}" />
                         </Grid.RowDefinitions>
-                        <DockPanel Grid.Row="0">
-                            <StackPanel Margin="0,5"
-                                        DockPanel.Dock="Top"
-                                        Orientation="Horizontal"
-                                        HorizontalAlignment="Right"
-                                        TextBlock.FontFamily="Consolas"
-                                        TextBlock.FontSize="20">
-                                <TextBlock Text="{Binding Path=SelectedMod.FileCount, FallbackValue=0}" />
-                                <TextBlock Text=" Files" />
-                            </StackPanel>
-                            <v:ModFilesDataGrid ItemsSource="{Binding Path=SelectedMod.Files}"
-                                                SelectedItem="{Binding Path=SelectedFile}" />
-                        </DockPanel>
-                        <TabControl Grid.Row="1"
-                                    Margin="0 5 0 0"
-                                    TabStripPlacement="Bottom">
-                            <TabItem Header="Overwritten">
-                                <DockPanel>
-                                    <StackPanel Margin="0,5"
-                                                DockPanel.Dock="Top"
-                                                Orientation="Horizontal"
-                                                HorizontalAlignment="Right"
-                                                TextBlock.FontFamily="Consolas"
-                                                TextBlock.FontSize="20">
-                                        <TextBlock Text="Overwriting " />
-                                        <TextBlock Text="{Binding Path=SelectedFile.OverwrittenCount, FallbackValue=0}" />
-                                        <TextBlock Text=" Files" />
-                                    </StackPanel>
-                                    <v:ModFilesDataGrid ItemsSource="{Binding Path=SelectedFile.Overwritten}" />
-                                </DockPanel>
-                            </TabItem>
-                            <TabItem Header="Overwriting">
-                                <DockPanel>
-                                    <StackPanel Margin="0,5"
-                                                DockPanel.Dock="Top"
-                                                Orientation="Horizontal"
-                                                HorizontalAlignment="Right"
-                                                TextBlock.FontFamily="Consolas"
-                                                TextBlock.FontSize="20">
-                                        <TextBlock Text="Overwritten by " />
-                                        <TextBlock Text="{Binding Path=SelectedFile.OverwritingCount, FallbackValue=0}" />
-                                        <TextBlock Text=" Files" />
-                                    </StackPanel>
-                                    <v:ModFilesDataGrid ItemsSource="{Binding Path=SelectedFile.Overwriting}" />
-                                </DockPanel>
-                            </TabItem>
-                        </TabControl>
+                        <v:ModFilesDataGrid Grid.Row="0"
+                                            ItemsSource="{Binding Path=SelectedMod.Files}"
+                                            SelectedItem="{Binding Path=SelectedFile}" />
+                        <v:ModFilesDataGrid Grid.Row="2"
+                                            ItemsSource="{Binding Path=SelectedFile.Conflicts}"
+                                            SelectedItem="{Binding Path=SelectedFileConflict}" />
+                        <GridSplitter Grid.Row="1"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      Background="Transparent" />
                     </Grid>
                 </TabItem>
-                <TabItem Header="Elements">
+                <TabItem Visibility="{Binding Path=ElementTabVisibility}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=SelectedMod.ElementCount, FallbackValue=0}" />
+                            <TextBlock Text=" Elements" />
+                            <StackPanel Orientation="Horizontal"
+                                        Visibility="{Binding Path=ElementConflictCountVisibility}">
+                                <TextBlock Text=" with " />
+                                <TextBlock Text="{Binding Path=SelectedMod.ElementConflictCount, FallbackValue=0}" />
+                                <TextBlock Text=" Conflicts" />
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem.Header>
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"
-                                           MinHeight="350" />
-                            <RowDefinition Height="*"
-                                           MinHeight="350" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="{Binding Path=ElementConflictRowHeight}" />
                         </Grid.RowDefinitions>
-                        <DockPanel Grid.Row="0">
-                            <StackPanel Margin="0,5"
-                                        DockPanel.Dock="Top"
-                                        Orientation="Horizontal"
-                                        HorizontalAlignment="Right"
-                                        TextBlock.FontFamily="Consolas"
-                                        TextBlock.FontSize="20">
-                                <TextBlock Text="Overwriting " />
-                                <TextBlock Text="{Binding Path=SelectedMod.ElementCount, FallbackValue=0}" />
-                                <TextBlock Text=" Elements" />
-                            </StackPanel>
-                            <DataGrid ItemsSource="{Binding Path=SelectedMod.Elements}"
-                                      SelectedItem="{Binding Path=SelectedElement}"
-                                      IsReadOnly="True"
-                                      AutoGenerateColumns="False"
-                                      CanUserAddRows="False"
-                                      CanUserDeleteRows="False"
-                                      CanUserReorderColumns="False"
-                                      CanUserResizeRows="False"
-                                      CanUserSortColumns="False"
-                                      HeadersVisibility="None"
-                                      HorizontalGridLinesBrush="LightGray"
-                                      VerticalGridLinesBrush="LightGray"
-                                      SelectionMode="Single"
-                                      SelectionUnit="FullRow"
-                                      HorizontalScrollBarVisibility="Disabled"
-                                      VerticalScrollBarVisibility="Visible">
-                                <DataGrid.Columns>
-                                    <DataGridTemplateColumn Width="auto">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Margin="5 0"
-                                                            Orientation="Horizontal">
-                                                    <Image Width="20"
-                                                           Height="20"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"
-                                                           Source="{Binding Path=Mod.ThumbnailUrl}" />
-                                                    <TextBlock Margin="5 0 0 0"
-                                                               VerticalAlignment="Center"
-                                                               TextTrimming="CharacterEllipsis"
-                                                               Text="{Binding Path=Mod.DisplayName}" />
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Width="*">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Margin="5 0"
-                                                           VerticalAlignment="Center"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           Text="{Binding Path=ID}" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Width="auto">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Margin="5 0"
-                                                           VerticalAlignment="Center"
-                                                           HorizontalAlignment="Right"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           Foreground="{Binding Path=ConflictCountBrush}"
-                                                           Text="{Binding Path=ConflictCount}" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                                <DataGrid.RowDetailsTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="20">
-                                            <WrapPanel Orientation="Horizontal">
-                                                <TextBlock TextTrimming="CharacterEllipsis"
-                                                           Text="{Binding Path=File.Mod.DisplayName}" />
-                                                <TextBlock TextTrimming="CharacterEllipsis"
-                                                           Text=" &#11208; " />
-                                                <TextBlock TextTrimming="CharacterEllipsis"
-                                                           Text="{Binding Path=File.Directory}" />
-                                                <TextBlock TextTrimming="CharacterEllipsis"
-                                                           Text=" &#11208; " />
-                                                <TextBlock TextTrimming="CharacterEllipsis"
-                                                           Text="{Binding Path=File.Name}" />
-                                                <TextBlock TextTrimming="CharacterEllipsis"
-                                                           Text=" &#11208; " />
-                                                <TextBlock TextTrimming="CharacterEllipsis"
-                                                           Text="{Binding Path=ID}" />
-                                            </WrapPanel>
-                                            <TextBlock Margin="0 5 0 0"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       Text="{Binding Path=File.Path}" />
-                                            <Expander Margin="0 5 0 0"
-                                                      MaxHeight="200"
-                                                      Header="Content">
-                                                <TextBox IsReadOnly="True"
-                                                         VerticalScrollBarVisibility="Auto"
-                                                         HorizontalScrollBarVisibility="Auto"
-                                                         Background="LightGray"
-                                                         Text="{Binding Path=Text, Mode=OneWay}" />
-                                            </Expander>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGrid.RowDetailsTemplate>
-                            </DataGrid>
-                        </DockPanel>
-                        <TabControl Grid.Row="1"
-                                    Margin="0 5 0 0"
-                                    TabStripPlacement="Bottom">
-                            <TabItem Header="Overwritten">
-                                <DockPanel>
-                                    <StackPanel Margin="0,5"
-                                                DockPanel.Dock="Top"
-                                                Orientation="Horizontal"
-                                                HorizontalAlignment="Right"
-                                                TextBlock.FontFamily="Consolas"
-                                                TextBlock.FontSize="20">
-                                        <TextBlock Text="Overwriting " />
-                                        <TextBlock Text="{Binding Path=SelectedElement.OverwrittenCount, FallbackValue=0}" />
-                                        <TextBlock Text=" Elements" />
-                                    </StackPanel>
-                                    <DataGrid ItemsSource="{Binding Path=SelectedElement.Overwritten}"
-                                              IsReadOnly="True"
-                                              AutoGenerateColumns="False"
-                                              CanUserAddRows="False"
-                                              CanUserDeleteRows="False"
-                                              CanUserReorderColumns="False"
-                                              CanUserResizeRows="False"
-                                              CanUserSortColumns="False"
-                                              HeadersVisibility="None"
-                                              HorizontalGridLinesBrush="LightGray"
-                                              VerticalGridLinesBrush="LightGray"
-                                              SelectionMode="Single"
-                                              SelectionUnit="FullRow"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              VerticalScrollBarVisibility="Visible">
-                                        <DataGrid.Columns>
-                                            <DataGridTemplateColumn Width="auto">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Margin="5 0"
-                                                                    Orientation="Horizontal">
-                                                            <Image Width="20"
-                                                                   Height="20"
-                                                                   HorizontalAlignment="Center"
-                                                                   VerticalAlignment="Center"
-                                                                   Source="{Binding Path=Mod.ThumbnailUrl}" />
-                                                            <TextBlock Margin="5 0 0 0"
-                                                                       VerticalAlignment="Center"
-                                                                       TextTrimming="CharacterEllipsis"
-                                                                       Text="{Binding Path=Mod.DisplayName}" />
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Width="*">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Margin="5 0"
-                                                                   VerticalAlignment="Center"
-                                                                   TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=ID}" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Width="auto">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Margin="5 0"
-                                                                   VerticalAlignment="Center"
-                                                                   HorizontalAlignment="Right"
-                                                                   TextTrimming="CharacterEllipsis"
-                                                                   Foreground="{Binding Path=ConflictCountBrush}"
-                                                                   Text="{Binding Path=ConflictCount}" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                        <DataGrid.RowDetailsTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Margin="20">
-                                                    <WrapPanel Orientation="Horizontal">
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=File.Mod.DisplayName}" />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text=" &#11208; " />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=File.Directory}" />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text=" &#11208; " />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=File.Name}" />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text=" &#11208; " />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=ID}" />
-                                                    </WrapPanel>
-                                                    <TextBlock Margin="0 5 0 0"
-                                                               TextTrimming="CharacterEllipsis"
-                                                               Text="{Binding Path=File.Path}" />
-                                                    <Expander Margin="0 5 0 0"
-                                                              MaxHeight="200"
-                                                              Header="Content">
-                                                        <TextBox IsReadOnly="True"
-                                                                 VerticalScrollBarVisibility="Auto"
-                                                                 HorizontalScrollBarVisibility="Auto"
-                                                                 Background="LightGray"
-                                                                 Text="{Binding Path=Text, Mode=OneWay}" />
-                                                    </Expander>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGrid.RowDetailsTemplate>
-                                    </DataGrid>
-                                </DockPanel>
-                            </TabItem>
-                            <TabItem Header="Overwriting">
-                                <DockPanel>
-                                    <StackPanel Margin="0,5"
-                                                DockPanel.Dock="Top"
-                                                Orientation="Horizontal"
-                                                HorizontalAlignment="Right"
-                                                TextBlock.FontFamily="Consolas"
-                                                TextBlock.FontSize="20">
-                                        <TextBlock Text="Overwritten by " />
-                                        <TextBlock Text="{Binding Path=SelectedElement.OverwritingCount, FallbackValue=0}" />
-                                        <TextBlock Text=" Elements" />
-                                    </StackPanel>
-                                    <DataGrid ItemsSource="{Binding Path=SelectedElement.Overwriting}"
-                                              IsReadOnly="True"
-                                              AutoGenerateColumns="False"
-                                              CanUserAddRows="False"
-                                              CanUserDeleteRows="False"
-                                              CanUserReorderColumns="False"
-                                              CanUserResizeRows="False"
-                                              CanUserSortColumns="False"
-                                              HeadersVisibility="None"
-                                              HorizontalGridLinesBrush="LightGray"
-                                              VerticalGridLinesBrush="LightGray"
-                                              SelectionMode="Single"
-                                              SelectionUnit="FullRow"
-                                              HorizontalScrollBarVisibility="Disabled"
-                                              VerticalScrollBarVisibility="Visible">
-                                        <DataGrid.Columns>
-                                            <DataGridTemplateColumn Width="auto">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Margin="5 0"
-                                                                    Orientation="Horizontal">
-                                                            <Image Width="20"
-                                                                   Height="20"
-                                                                   HorizontalAlignment="Center"
-                                                                   VerticalAlignment="Center"
-                                                                   Source="{Binding Path=Mod.ThumbnailUrl}" />
-                                                            <TextBlock Margin="5 0 0 0"
-                                                                       VerticalAlignment="Center"
-                                                                       TextTrimming="CharacterEllipsis"
-                                                                       Text="{Binding Path=Mod.DisplayName}" />
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Width="*">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Margin="5 0"
-                                                                   VerticalAlignment="Center"
-                                                                   TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=ID}" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Width="auto">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Margin="5 0"
-                                                                   VerticalAlignment="Center"
-                                                                   HorizontalAlignment="Right"
-                                                                   TextTrimming="CharacterEllipsis"
-                                                                   Foreground="{Binding Path=ConflictCountBrush}"
-                                                                   Text="{Binding Path=ConflictCount}" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                        <DataGrid.RowDetailsTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Margin="20">
-                                                    <WrapPanel Orientation="Horizontal">
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=File.Mod.DisplayName}" />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text=" &#11208; " />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=File.Directory}" />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text=" &#11208; " />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=File.Name}" />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text=" &#11208; " />
-                                                        <TextBlock TextTrimming="CharacterEllipsis"
-                                                                   Text="{Binding Path=ID}" />
-                                                    </WrapPanel>
-                                                    <TextBlock Margin="0 5 0 0"
-                                                               TextTrimming="CharacterEllipsis"
-                                                               Text="{Binding Path=File.Path}" />
-                                                    <Expander Margin="0 5 0 0"
-                                                              MaxHeight="200"
-                                                              Header="Content">
-                                                        <TextBox IsReadOnly="True"
-                                                                 VerticalScrollBarVisibility="Auto"
-                                                                 HorizontalScrollBarVisibility="Auto"
-                                                                 Background="LightGray"
-                                                                 Text="{Binding Path=Text, Mode=OneWay}" />
-                                                    </Expander>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGrid.RowDetailsTemplate>
-                                    </DataGrid>
-                                </DockPanel>
-                            </TabItem>
-                        </TabControl>
+                        <v:ModElementsDataGrid Grid.Row="0"
+                                               ItemsSource="{Binding Path=SelectedMod.Elements}"
+                                               SelectedItem="{Binding Path=SelectedElement}" />
+                        <v:ModElementsDataGrid Grid.Row="2"
+                                               ItemsSource="{Binding Path=SelectedElement.Conflicts}"
+                                               SelectedItem="{Binding Path=SelectedElementConflict}" />
+                        <GridSplitter Grid.Row="1"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      Background="Transparent" />
                     </Grid>
                 </TabItem>
             </TabControl>
-            <GridSplitter Grid.Column="0"
-                          Width="5"
-                          HorizontalAlignment="Right"
-                          VerticalAlignment="Stretch"
-                          Background="Transparent" />
             <GridSplitter Grid.Column="1"
-                          Width="5"
-                          HorizontalAlignment="Left"
+                          HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch"
                           Background="Transparent" />
         </Grid>
