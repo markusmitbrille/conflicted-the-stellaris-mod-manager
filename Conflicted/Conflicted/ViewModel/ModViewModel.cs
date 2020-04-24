@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Windows.Media;
 
 namespace Conflicted.ViewModel
@@ -25,6 +26,23 @@ namespace Conflicted.ViewModel
         public string Cause => model.Cause;
         public string ThumbnailPath => model.ThumbnailPath;
         public string WebPageUrl => SteamID.HasValue ? $"https://steamcommunity.com/sharedfiles/filedetails/?id={SteamID.Value}" : "https://www.google.com";
+
+        private string page;
+        public string Page
+        {
+            get
+            {
+                if (page == null)
+                {
+                    using (WebClient webClient = new WebClient())
+                    {
+                        page = webClient.DownloadString(WebPageUrl);
+                    }
+                }
+
+                return page;
+            }
+        }
 
         private ModlistViewModel modlist;
         public ModlistViewModel Modlist => modlist ?? (modlist = ModlistViewModel.Create(model.Modlist));

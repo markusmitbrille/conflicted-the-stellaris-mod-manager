@@ -34,7 +34,7 @@ namespace Conflicted.View
                 return;
             }
 
-            browser.Navigate(mod.WebPageUrl);
+            browser.NavigateToString(mod.Page);
         }
     }
 }
