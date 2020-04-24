@@ -41,10 +41,10 @@ namespace Conflicted.ViewModel
 
         private RelayCommand openModRegistryCommand;
         public RelayCommand OpenModRegistryCommand => openModRegistryCommand ?? (openModRegistryCommand = new RelayCommand(ExecuteOpenModRegistry));
-       
+
         private RelayCommand openGameDataCommand;
         public RelayCommand OpenGameDataCommand => openGameDataCommand ?? (openGameDataCommand = new RelayCommand(ExecuteOpenGameData));
-       
+
         private RelayCommand saveGameDataCommand;
         public RelayCommand SaveGameDataCommand => saveGameDataCommand ?? (saveGameDataCommand = new RelayCommand(ExecuteSaveGameData));
 
@@ -55,6 +55,9 @@ namespace Conflicted.ViewModel
         private ModlistViewModel(Modlist model) : base(model)
         {
             instances[model] = this;
+
+            model.RegistryLoaded += Model_RegistryLoaded;
+            model.DataLoaded += Model_DataLoaded;
 
             model.ModMovedTop += Model_ModMovedTop;
             model.ModMovedUp += Model_ModMovedUp;
@@ -186,6 +189,18 @@ namespace Conflicted.ViewModel
             currentDirectory = Path.GetDirectoryName(dialog.FileName);
 
             model.SaveGameData(dialog.FileName);
+        }
+
+        private void Model_RegistryLoaded(object sender, EventArgs e)
+        {
+            mods = null;
+            OnPropertyChanged(nameof(Mods));
+        }
+
+        private void Model_DataLoaded(object sender, EventArgs e)
+        {
+            mods = null;
+            OnPropertyChanged(nameof(Mods));
         }
 
         private void Model_ModMovedTop(object sender, Modlist.ModMovedEventArgs e)
