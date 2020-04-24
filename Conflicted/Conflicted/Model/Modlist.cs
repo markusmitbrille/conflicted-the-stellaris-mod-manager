@@ -182,7 +182,7 @@ namespace Conflicted.Model
         {
             if (File.Exists(file))
             {
-                File.Copy(file, $"{Path.GetDirectoryName(file)}{Path.DirectorySeparatorChar}{DateTime.Now:yyyyMMddHHmmss}_{Path.GetFileName(file)}.bak", true);
+                File.Copy(file, $"{file}.bak{DateTime.Now:yyyyMMddHHmmss}", true);
             }
 
             GameData data = new GameData()
