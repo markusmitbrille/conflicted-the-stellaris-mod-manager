@@ -27,8 +27,10 @@ namespace Conflicted.ViewModel
                 SelectedElementConflict = null;
 
                 selectedMod = value;
-                
+
                 OnPropertyChanged();
+
+                OnPropertyChanged(nameof(MoveButtonIsEnabled));
 
                 OnPropertyChanged(nameof(FileTabHeader));
                 OnPropertyChanged(nameof(ElementTabHeader));
@@ -37,6 +39,8 @@ namespace Conflicted.ViewModel
                 OnPropertyChanged(nameof(ElementTabVisibility));
             }
         }
+
+        public bool MoveButtonIsEnabled => SelectedMod != null;
 
         public string FileTabHeader => SelectedMod == null ? null : $"{SelectedMod.FileCount} {(SelectedMod.FileCount > 1 ? "Files" : "File")}{(SelectedMod.FileConflictCount > 0 ? $" with {SelectedMod.FileConflictCount} {(SelectedMod.FileConflictCount > 1 ? "Conflicts" : "Conflict")}" : null)}";
         public string ElementTabHeader => SelectedMod == null ? null : $"{SelectedMod.ElementCount} {(SelectedMod.ElementCount > 1 ? "Elements" : "Element")}{(SelectedMod.ElementConflictCount > 0 ? $" with {SelectedMod.ElementConflictCount} {(SelectedMod.ElementConflictCount > 1 ? "Conflicts" : "Conflict")}" : null)}";
@@ -51,7 +55,7 @@ namespace Conflicted.ViewModel
             set
             {
                 selectedFile = value;
-                
+
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(FileConflictRowHeight));
             }
@@ -75,7 +79,7 @@ namespace Conflicted.ViewModel
             set
             {
                 selectedElement = value;
-                
+
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ElementConflictRowHeight));
             }

@@ -111,16 +111,16 @@ namespace Conflicted.ViewModel
         public Brush ConflictCountBrush => conflictCountBrush ?? (conflictCountBrush = ConflictCount > 0 ? Brushes.Red : Brushes.Black);
 
         private RelayCommand moveTopCommand;
-        public RelayCommand MoveTopCommand => moveTopCommand ?? (moveTopCommand = new RelayCommand(ExecuteMoveTop));
+        public RelayCommand MoveTopCommand => moveTopCommand ?? (moveTopCommand = new RelayCommand(ExecuteMoveTop, CanExecuteMoveTop));
 
         private RelayCommand moveUpCommand;
-        public RelayCommand MoveUpCommand => moveUpCommand ?? (moveUpCommand = new RelayCommand(ExecuteMoveUp));
+        public RelayCommand MoveUpCommand => moveUpCommand ?? (moveUpCommand = new RelayCommand(ExecuteMoveUp, CanExecuteMoveUp));
 
         private RelayCommand moveDownCommand;
-        public RelayCommand MoveDownCommand => moveDownCommand ?? (moveDownCommand = new RelayCommand(ExecuteMoveDown));
+        public RelayCommand MoveDownCommand => moveDownCommand ?? (moveDownCommand = new RelayCommand(ExecuteMoveDown, CanExecuteMoveDown));
 
         private RelayCommand moveBottomCommand;
-        public RelayCommand MoveBottomCommand => moveBottomCommand ?? (moveBottomCommand = new RelayCommand(ExecuteMoveBottom));
+        public RelayCommand MoveBottomCommand => moveBottomCommand ?? (moveBottomCommand = new RelayCommand(ExecuteMoveBottom, CanExecuteMoveBottom));
 
         private ModViewModel(Mod model) : base(model)
         {
@@ -136,6 +136,14 @@ namespace Conflicted.ViewModel
 
             return new ModViewModel(model);
         }
+
+        private bool CanExecuteMoveTop(object obj) => model.Modlist.Order.First() != model.ID;
+
+        private bool CanExecuteMoveUp(object obj) => model.Modlist.Order.First() != model.ID;
+
+        private bool CanExecuteMoveDown(object obj) => model.Modlist.Order.Last() != model.ID;
+
+        private bool CanExecuteMoveBottom(object obj) => model.Modlist.Order.Last() != model.ID;
 
         private void ExecuteMoveTop(object obj) => model.MoveTop();
 

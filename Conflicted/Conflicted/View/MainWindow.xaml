@@ -47,19 +47,19 @@
                             Width="40"
                             VerticalAlignment="Center"
                             TextBlock.FontSize="30"
-                            DataContext="{Binding Path=SelectedMod}">
-                    <Button Command="{Binding Path=MoveTopCommand}">
+                            IsEnabled="{Binding Path=MoveButtonIsEnabled}">
+                    <Button Command="{Binding Path=SelectedMod.MoveTopCommand}">
                         <TextBlock Text="&#11121;" />
                     </Button>
-                    <Button Command="{Binding Path=MoveUpCommand}"
+                    <Button Command="{Binding Path=SelectedMod.MoveUpCommand}"
                             Margin="0 5 0 0">
                         <TextBlock Text="&#11105;" />
                     </Button>
-                    <Button Command="{Binding Path=MoveDownCommand}"
+                    <Button Command="{Binding Path=SelectedMod.MoveDownCommand}"
                             Margin="0 5 0 0">
                         <TextBlock Text="&#11107;" />
                     </Button>
-                    <Button Command="{Binding Path=MoveBottomCommand}"
+                    <Button Command="{Binding Path=SelectedMod.MoveBottomCommand}"
                             Margin="0 5 0 0">
                         <TextBlock Text="&#11123;" />
                     </Button>
