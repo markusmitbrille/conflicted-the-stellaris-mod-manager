@@ -50,5 +50,10 @@ namespace Conflicted.ViewModel
 
             return new ModFileViewModel(model);
         }
+
+        public static void Flush()
+        {
+            instances.Clear();
+        }
     }
 }

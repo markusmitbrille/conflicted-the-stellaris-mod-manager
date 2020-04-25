@@ -137,6 +137,11 @@ namespace Conflicted.ViewModel
             return new ModViewModel(model);
         }
 
+        public static void Flush()
+        {
+            instances.Clear();
+        }
+
         private bool CanExecuteMoveTop(object obj) => model.Modlist.Order.First() != model.ID;
 
         private bool CanExecuteMoveUp(object obj) => model.Modlist.Order.First() != model.ID;

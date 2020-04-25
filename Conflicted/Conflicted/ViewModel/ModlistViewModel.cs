@@ -77,6 +77,11 @@ namespace Conflicted.ViewModel
             return new ModlistViewModel(model);
         }
 
+        public static void Flush()
+        {
+            instances.Clear();
+        }
+
         private void TryOpenDefaultFiles()
         {
             string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}{Path.DirectorySeparatorChar}Paradox Interactive{Path.DirectorySeparatorChar}Stellaris";
@@ -193,6 +198,10 @@ namespace Conflicted.ViewModel
 
         private void Model_RegistryLoaded(object sender, EventArgs e)
         {
+            ModViewModel.Flush();
+            ModFileViewModel.Flush();
+            ModElementViewModel.Flush();
+
             mods = null;
             OnPropertyChanged(nameof(Mods));
         }

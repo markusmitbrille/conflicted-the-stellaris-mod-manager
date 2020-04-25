@@ -205,6 +205,9 @@ namespace Conflicted.Model
 
             mods = registry?.Values.Select(entry => new Mod(this, entry)).ToList() ?? new List<Mod>();
 
+            fileConflicts = null;
+            elementConflicts = null;
+
             foreach (var mod in mods.Where(mod => !order.Contains(mod.ID)))
             {
                 order.Insert(0, mod.ID);

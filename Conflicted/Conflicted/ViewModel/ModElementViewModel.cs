@@ -43,5 +43,10 @@ namespace Conflicted.ViewModel
 
             return new ModElementViewModel(model);
         }
+
+        public static void Flush()
+        {
+            instances.Clear();
+        }
     }
 }
