@@ -79,36 +79,30 @@
     </DataGrid.Columns>
     <DataGrid.RowDetailsTemplate>
         <DataTemplate>
-            <StackPanel Margin="20">
-                <WrapPanel Orientation="Horizontal">
-                    <TextBlock TextTrimming="CharacterEllipsis"
-                               Text="{Binding Path=Mod.DisplayName}" />
-                    <StackPanel Orientation="Horizontal">
+            <Border BorderThickness="0 0 1 0"
+                    BorderBrush="LightGray">
+                <StackPanel Margin="20">
+                    <WrapPanel Orientation="Horizontal">
                         <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text=" &#11208; " />
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text="{Binding Path=Directory}" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text=" &#11208; " />
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text="{Binding Path=Name}" />
-                    </StackPanel>
-                </WrapPanel>
-                <TextBlock Margin="0,5,0,0"
-                           Text="{Binding Path=Path}"
-                           TextTrimming="CharacterEllipsis" />
-                <Expander MaxHeight="200"
-                          Margin="0,5,0,0"
-                          Header="File Content">
-                    <TextBox Background="LightGray"
-                             HorizontalScrollBarVisibility="Auto"
-                             IsReadOnly="True"
-                             Text="{Binding Path=Text, Mode=OneWay}"
-                             VerticalScrollBarVisibility="Auto" />
-                </Expander>
-            </StackPanel>
+                                   Text="{Binding Path=Mod.DisplayName}" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text=" &#11208; " />
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text="{Binding Path=Directory}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text=" &#11208; " />
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text="{Binding Path=Name}" />
+                        </StackPanel>
+                    </WrapPanel>
+                    <TextBlock Margin="0,5,0,0"
+                               Text="{Binding Path=Path}"
+                               TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </Border>
         </DataTemplate>
     </DataGrid.RowDetailsTemplate>
 </DataGrid>

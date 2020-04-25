@@ -79,42 +79,36 @@
     </DataGrid.Columns>
     <DataGrid.RowDetailsTemplate>
         <DataTemplate>
-            <StackPanel Margin="20">
-                <WrapPanel Orientation="Horizontal">
-                    <TextBlock TextTrimming="CharacterEllipsis"
-                               Text="{Binding Path=File.Mod.DisplayName}" />
-                    <StackPanel Orientation="Horizontal">
+            <Border BorderThickness="0 0 1 0"
+                    BorderBrush="LightGray">
+                <StackPanel Margin="20">
+                    <WrapPanel Orientation="Horizontal">
                         <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text=" &#11208; " />
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text="{Binding Path=File.Directory}" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text=" &#11208; " />
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text="{Binding Path=File.Name}" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text=" &#11208; " />
-                        <TextBlock TextTrimming="CharacterEllipsis"
-                                   Text="{Binding Path=ID}" />
-                    </StackPanel>
-                </WrapPanel>
-                <TextBlock Margin="0 5 0 0"
-                           TextTrimming="CharacterEllipsis"
-                           Text="{Binding Path=File.Path}" />
-                <Expander Margin="0 5 0 0"
-                          MaxHeight="200"
-                          Header="Content">
-                    <TextBox IsReadOnly="True"
-                             VerticalScrollBarVisibility="Auto"
-                             HorizontalScrollBarVisibility="Auto"
-                             Background="LightGray"
-                             Text="{Binding Path=Text, Mode=OneWay}" />
-                </Expander>
-            </StackPanel>
+                                   Text="{Binding Path=File.Mod.DisplayName}" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text=" &#11208; " />
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text="{Binding Path=File.Directory}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text=" &#11208; " />
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text="{Binding Path=File.Name}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text=" &#11208; " />
+                            <TextBlock TextTrimming="CharacterEllipsis"
+                                       Text="{Binding Path=ID}" />
+                        </StackPanel>
+                    </WrapPanel>
+                    <TextBlock Margin="0 5 0 0"
+                               TextTrimming="CharacterEllipsis"
+                               Text="{Binding Path=File.Path}" />
+                </StackPanel>
+            </Border>
         </DataTemplate>
     </DataGrid.RowDetailsTemplate>
 </DataGrid>

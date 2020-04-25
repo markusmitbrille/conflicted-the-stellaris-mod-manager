@@ -45,11 +45,8 @@
         </Grid>
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"
-                                  MinWidth="300" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="5*"
-                                  MinWidth="500" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="7*" />
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Column="0">
                 <StackPanel DockPanel.Dock="Right"
@@ -61,84 +58,117 @@
                     <Button Command="{Binding Path=SelectedMod.MoveTopCommand}">
                         <TextBlock Text="&#11121;" />
                     </Button>
-                    <Button Command="{Binding Path=SelectedMod.MoveUpCommand}"
-                            Margin="0 5 0 0">
+                    <Button Margin="0 5 0 0"
+                            Command="{Binding Path=SelectedMod.MoveUpCommand}">
                         <TextBlock Text="&#11105;" />
                     </Button>
-                    <Button Command="{Binding Path=SelectedMod.MoveDownCommand}"
-                            Margin="0 5 0 0">
+                    <Button Margin="0 5 0 0"
+                            Command="{Binding Path=SelectedMod.MoveDownCommand}">
                         <TextBlock Text="&#11107;" />
                     </Button>
-                    <Button Command="{Binding Path=SelectedMod.MoveBottomCommand}"
-                            Margin="0 5 0 0">
+                    <Button Margin="0 5 0 0"
+                            Command="{Binding Path=SelectedMod.MoveBottomCommand}">
                         <TextBlock Text="&#11123;" />
                     </Button>
                 </StackPanel>
                 <v:ModsDataGrid x:Name="dgMods"
+                                BorderBrush="LightGray"
                                 ItemsSource="{Binding Path=Modlist.Mods}"
                                 SelectedItem="{Binding Path=SelectedMod}"
                                 SelectionChanged="Mods_SelectionChanged" />
             </DockPanel>
-            <TabControl Grid.Column="2">
+            <TabControl Grid.Column="1"
+                        Margin="5 0 0 0">
                 <TabItem Header="Description">
                     <controls:WebView x:Name="browser" />
                 </TabItem>
                 <TabItem Visibility="{Binding Path=FileTabVisibility}"
                          Header="{Binding Path=FileTabHeader}">
                     <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="{Binding Path=FileConflictColumnWidth}" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="5" />
-                            <RowDefinition Height="{Binding Path=FileConflictRowHeight, Mode=OneWay}" />
+                            <RowDefinition Height="{Binding Path=FileContentRowHeight}" />
                         </Grid.RowDefinitions>
-                        <v:ModFilesDataGrid Grid.Row="0"
+                        <v:ModFilesDataGrid Grid.Column="0"
+                                            Grid.Row="0"
+                                            Margin="0,0,2.5,2.5"
+                                            BorderBrush="LightGray"
                                             ItemsSource="{Binding Path=SelectedMod.Files}"
                                             SelectedItem="{Binding Path=SelectedFile}" />
-                        <v:ModFilesDataGrid Grid.Row="2"
+                        <v:ModFilesDataGrid Grid.Column="1"
+                                            Grid.Row="0"
+                                            Margin="2.5,0,0,2.5"
+                                            BorderBrush="LightGray"
                                             ItemsSource="{Binding Path=SelectedFile.Conflicts}"
                                             SelectedItem="{Binding Path=SelectedFileConflict}" />
-                        <GridSplitter Grid.Row="1"
-                                      HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch"
-                                      Background="Transparent" />
+                        <TextBox Grid.Column="0"
+                                 Grid.Row="1"
+                                 Margin="0,2.5,2.5,0"
+                                 Background="LightGray"
+                                 IsReadOnly="True"
+                                 BorderBrush="LightGray"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Text="{Binding Path=SelectedFile.Text, Mode=OneWay}" />
+                        <TextBox Grid.Column="1"
+                                 Grid.Row="1"
+                                 Margin="2.5,2.5,0,0"
+                                 Background="LightGray"
+                                 BorderBrush="LightGray"
+                                 IsReadOnly="True"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Text="{Binding Path=SelectedFileConflict.Text, Mode=OneWay}" />
                     </Grid>
                 </TabItem>
-                <TabItem Visibility="{Binding Path=ElementTabVisibility}">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Path=SelectedMod.ElementCount, FallbackValue=0}" />
-                            <TextBlock Text=" Elements" />
-                            <StackPanel Orientation="Horizontal"
-                                        Visibility="{Binding Path=ElementConflictCountVisibility}">
-                                <TextBlock Text=" with " />
-                                <TextBlock Text="{Binding Path=SelectedMod.ElementConflictCount, FallbackValue=0}" />
-                                <TextBlock Text=" Conflicts" />
-                            </StackPanel>
-                        </StackPanel>
-                    </TabItem.Header>
+                <TabItem Visibility="{Binding Path=ElementTabVisibility}"
+                         Header="{Binding Path=ElementTabHeader}">
                     <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="{Binding Path=ElementConflictColumnWidth}" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="5" />
-                            <RowDefinition Height="{Binding Path=ElementConflictRowHeight}" />
+                            <RowDefinition Height="{Binding Path=ElementContentRowHeight}" />
                         </Grid.RowDefinitions>
-                        <v:ModElementsDataGrid Grid.Row="0"
-                                               ItemsSource="{Binding Path=SelectedMod.Elements}"
-                                               SelectedItem="{Binding Path=SelectedElement}" />
-                        <v:ModElementsDataGrid Grid.Row="2"
-                                               ItemsSource="{Binding Path=SelectedElement.Conflicts}"
-                                               SelectedItem="{Binding Path=SelectedElementConflict}" />
-                        <GridSplitter Grid.Row="1"
-                                      HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch"
-                                      Background="Transparent" />
+                        <v:ModElementsDataGrid Grid.Column="0"
+                                            Grid.Row="0"
+                                            Margin="0,0,2.5,2.5"
+                                            BorderBrush="LightGray"
+                                            ItemsSource="{Binding Path=SelectedMod.Elements}"
+                                            SelectedItem="{Binding Path=SelectedElement}" />
+                        <v:ModElementsDataGrid Grid.Column="1"
+                                            Grid.Row="0"
+                                            Margin="2.5,0,0,2.5"
+                                            BorderBrush="LightGray"
+                                            ItemsSource="{Binding Path=SelectedElement.Conflicts}"
+                                            SelectedItem="{Binding Path=SelectedElementConflict}" />
+                        <TextBox Grid.Column="0"
+                                 Grid.Row="1"
+                                 Margin="0,2.5,2.5,0"
+                                 Background="LightGray"
+                                 IsReadOnly="True"
+                                 BorderBrush="LightGray"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Text="{Binding Path=SelectedElement.Text, Mode=OneWay}" />
+                        <TextBox Grid.Column="1"
+                                 Grid.Row="1"
+                                 Margin="2.5,2.5,0,0"
+                                 Background="LightGray"
+                                 BorderBrush="LightGray"
+                                 IsReadOnly="True"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Text="{Binding Path=SelectedElementConflict.Text, Mode=OneWay}" />
                     </Grid>
                 </TabItem>
             </TabControl>
-            <GridSplitter Grid.Column="1"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch"
-                          Background="Transparent" />
         </Grid>
     </DockPanel>
 </Window>

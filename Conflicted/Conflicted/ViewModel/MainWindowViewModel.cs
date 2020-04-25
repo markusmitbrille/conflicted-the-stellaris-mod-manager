@@ -57,9 +57,13 @@ namespace Conflicted.ViewModel
                 selectedFile = value;
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(FileConflictRowHeight));
+                OnPropertyChanged(nameof(FileConflictColumnWidth));
+                OnPropertyChanged(nameof(FileContentRowHeight));
             }
         }
+
+        public GridLength FileConflictColumnWidth => SelectedFile == null ? new GridLength(0, GridUnitType.Star) : SelectedFile.ConflictCount > 0 ? new GridLength(1, GridUnitType.Star) : new GridLength(0, GridUnitType.Star);
+        public GridLength FileContentRowHeight => SelectedFile == null ? new GridLength(0, GridUnitType.Star) : string.IsNullOrEmpty(SelectedFile.Text) ? new GridLength(0, GridUnitType.Star) : new GridLength(1, GridUnitType.Star);
 
         private ModFileViewModel selectedFileConflict;
         public ModFileViewModel SelectedFileConflict
@@ -81,9 +85,13 @@ namespace Conflicted.ViewModel
                 selectedElement = value;
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(ElementConflictRowHeight));
+                OnPropertyChanged(nameof(ElementConflictColumnWidth));
+                OnPropertyChanged(nameof(ElementContentRowHeight));
             }
         }
+
+        public GridLength ElementConflictColumnWidth => SelectedElement == null ? new GridLength(0, GridUnitType.Star) : SelectedElement.ConflictCount > 0 ? new GridLength(1, GridUnitType.Star) : new GridLength(0, GridUnitType.Star);
+        public GridLength ElementContentRowHeight => SelectedElement == null ? new GridLength(0, GridUnitType.Star) : string.IsNullOrEmpty(SelectedElement.Text) ? new GridLength(0, GridUnitType.Star) : new GridLength(1, GridUnitType.Star);
 
         private ModElementViewModel selectedElementConflict;
         public ModElementViewModel SelectedElementConflict
@@ -95,9 +103,6 @@ namespace Conflicted.ViewModel
                 OnPropertyChanged();
             }
         }
-
-        public GridLength FileConflictRowHeight => SelectedFile == null ? new GridLength(0, GridUnitType.Star) : SelectedFile.ConflictCount > 0 ? new GridLength(1, GridUnitType.Star) : new GridLength(0, GridUnitType.Star);
-        public GridLength ElementConflictRowHeight => SelectedElement == null ? new GridLength(0, GridUnitType.Star) : SelectedElement.ConflictCount > 0 ? new GridLength(1, GridUnitType.Star) : new GridLength(0, GridUnitType.Star);
 
         private RelayCommand openOptionsCommand;
         public RelayCommand OpenOptionsCommand => openOptionsCommand ?? (openOptionsCommand = new RelayCommand(ExecuteOpenOptions));
