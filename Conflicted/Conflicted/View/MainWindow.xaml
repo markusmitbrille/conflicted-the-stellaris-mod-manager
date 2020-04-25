@@ -33,6 +33,16 @@
                           Command="{Binding Path=OpenOptionsCommand}" />
             </MenuItem>
         </Menu>
+        <Grid DockPanel.Dock="Bottom"
+              Margin="5"
+              Height="20">
+            <ProgressBar IsIndeterminate="{Binding Path=Modlist.ProgressBarIsIndeterminate}"
+                         Value="{Binding Path=Modlist.Progress}"
+                         Maximum="{Binding Path=Modlist.Goal}" />
+            <TextBlock VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Text="{Binding Path=Modlist.ProgressBarLabel}" />
+        </Grid>
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"

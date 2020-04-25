@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conflicted.ViewModel
 {
@@ -17,7 +19,29 @@ namespace Conflicted.ViewModel
         private int? modCount;
         public int? ModCount => modCount ?? (modCount = Mods.Count());
 
-        private int progress;
+        private string progressBarLabel;
+        public string ProgressBarLabel
+        {
+            get => progressBarLabel;
+            set
+            {
+                progressBarLabel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool progressBarIsIndeterminate;
+        public bool ProgressBarIsIndeterminate
+        {
+            get => progressBarIsIndeterminate;
+            set
+            {
+                progressBarIsIndeterminate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int progress = 0;
         public int Progress
         {
             get => progress;
@@ -28,7 +52,7 @@ namespace Conflicted.ViewModel
             }
         }
 
-        private int goal;
+        private int goal = 0;
         public int Goal
         {
             get => goal;
@@ -52,11 +76,17 @@ namespace Conflicted.ViewModel
         private string currentModRegistry;
         private string currentGameData;
 
+        private Task cachingTask;
+        private CancellationTokenSource cachingCancellation;
+
         private ModlistViewModel(Modlist model) : base(model)
         {
             instances[model] = this;
 
+            model.RegistryLoading += Model_RegistryLoading;
             model.RegistryLoaded += Model_RegistryLoaded;
+
+            model.DataLoading += Model_DataLoading;
             model.DataLoaded += Model_DataLoaded;
 
             model.ModMovedTop += Model_ModMovedTop;
@@ -65,6 +95,18 @@ namespace Conflicted.ViewModel
             model.ModMovedBottom += Model_ModMovedBottom;
 
             TryOpenDefaultFiles();
+        }
+
+        private void StartCaching()
+        {
+            if (!cachingTask?.IsCompleted ?? false)
+            {
+                cachingCancellation.Cancel();
+                cachingTask.Wait();
+            }
+
+            cachingCancellation = new CancellationTokenSource();
+            cachingTask = Task.Run(Cache, cachingCancellation.Token);
         }
 
         public static ModlistViewModel Create(Modlist model)
@@ -99,6 +141,83 @@ namespace Conflicted.ViewModel
             else
             {
                 currentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
+        }
+
+        private void Cache()
+        {
+            if (cachingCancellation?.IsCancellationRequested ?? true)
+            {
+                Progress = 0;
+                Goal = 0;
+                return;
+            }
+
+            ProgressBarIsIndeterminate = true;
+            ProgressBarLabel = "Building File Conflict Cache";
+
+            model.FileConflicts.ToArray();
+
+            ProgressBarLabel = "Building Element Conflict Cache";
+
+            model.ElementConflicts.ToArray();
+
+            Progress = 0;
+            Goal = model.Mods.Count();
+            ProgressBarIsIndeterminate = false;
+
+            foreach (var mod in Mods)
+            {
+                if (cachingCancellation?.IsCancellationRequested ?? true)
+                {
+                    Progress = 0;
+                    Goal = 0;
+                    return;
+                }
+
+                ProgressBarLabel = $"Loading Mod {Progress + 1}/{Goal}";
+
+                mod.Page.ToString();
+
+                Progress++;
+            }
+
+            ProgressBarIsIndeterminate = true;
+            ProgressBarLabel = "";
+            Progress = 0;
+            Goal = model.Mods.SelectMany(mod => mod.Files).Count();
+            ProgressBarIsIndeterminate = false;
+
+            foreach (var file in Mods.SelectMany(mod => mod.Files))
+            {
+                if (cachingCancellation?.IsCancellationRequested ?? true)
+                {
+                    Progress = 0;
+                    Goal = 0;
+                    return;
+                }
+
+                ProgressBarLabel = $"Loading File {Progress + 1}/{Goal}";
+                Progress++;
+            }
+
+            ProgressBarIsIndeterminate = true;
+            ProgressBarLabel = "";
+            Progress = 0;
+            Goal = model.Mods.SelectMany(mod => mod.Elements).Count();
+            ProgressBarIsIndeterminate = false;
+
+            foreach (var element in Mods.SelectMany(mod => mod.Elements))
+            {
+                if (cachingCancellation?.IsCancellationRequested ?? true)
+                {
+                    Progress = 0;
+                    Goal = 0;
+                    return;
+                }
+
+                ProgressBarLabel = $"Loading Element {Progress + 1}/{Goal}";
+                Progress++;
             }
         }
 
@@ -196,6 +315,11 @@ namespace Conflicted.ViewModel
             model.SaveGameData(dialog.FileName);
         }
 
+        private void Model_RegistryLoading(object sender, EventArgs e)
+        {
+            cachingCancellation?.Cancel();
+        }
+
         private void Model_RegistryLoaded(object sender, EventArgs e)
         {
             ModViewModel.Flush();
@@ -204,6 +328,12 @@ namespace Conflicted.ViewModel
 
             mods = null;
             OnPropertyChanged(nameof(Mods));
+
+            StartCaching();
+        }
+
+        private void Model_DataLoading(object sender, EventArgs e)
+        {
         }
 
         private void Model_DataLoaded(object sender, EventArgs e)
