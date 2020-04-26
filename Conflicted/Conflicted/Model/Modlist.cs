@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -119,7 +120,16 @@ namespace Conflicted.Model
                 return false;
             }
 
-            ModRegistry registry = JsonConvert.DeserializeObject<ModRegistry>(File.ReadAllText(file));
+            ModRegistry registry;
+            try
+            {
+                registry = JsonConvert.DeserializeObject<ModRegistry>(File.ReadAllText(file));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
             if (registry == null)
             {
                 return false;
@@ -137,7 +147,16 @@ namespace Conflicted.Model
                 return false;
             }
 
-            GameData data = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(file));
+            GameData data;
+            try
+            {
+                data = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(file));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
             if (data == null)
             {
                 return false;
