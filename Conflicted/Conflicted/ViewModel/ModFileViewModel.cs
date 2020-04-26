@@ -36,6 +36,28 @@ namespace Conflicted.ViewModel
         private Brush conflictCountBrush;
         public Brush ConflictCountBrush => conflictCountBrush ?? (conflictCountBrush = ConflictCount > 0 ? Brushes.Red : Brushes.Black);
 
+        private Brush backgroundBrush = Brushes.Transparent;
+        public Brush BackgroundBrush
+        {
+            get => backgroundBrush;
+            set
+            {
+                backgroundBrush = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Brush foregroundBrush = Brushes.Black;
+        public Brush ForegroundBrush
+        {
+            get => foregroundBrush;
+            set
+            {
+                foregroundBrush = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ModFileViewModel(ModFile model) : base(model)
         {
             instances[model] = this;

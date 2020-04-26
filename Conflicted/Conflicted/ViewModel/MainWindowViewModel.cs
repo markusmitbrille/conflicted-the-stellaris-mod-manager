@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Conflicted.ViewModel
 {
@@ -26,7 +27,19 @@ namespace Conflicted.ViewModel
                 SelectedElement = null;
                 SelectedElementConflict = null;
 
+                if (selectedMod != null)
+                {
+                    selectedMod.BackgroundBrush = Brushes.Transparent;
+                    selectedMod.ForegroundBrush = Brushes.Black;
+                }
+
                 selectedMod = value;
+
+                if (selectedMod != null)
+                {
+                    selectedMod.BackgroundBrush = Brushes.LightBlue;
+                    selectedMod.ForegroundBrush = Brushes.Black;
+                }
 
                 OnPropertyChanged();
 
@@ -54,9 +67,22 @@ namespace Conflicted.ViewModel
             get => selectedFile;
             set
             {
+                if (selectedFile != null)
+                {
+                    selectedFile.BackgroundBrush = Brushes.Transparent;
+                    selectedFile.ForegroundBrush = Brushes.Black;
+                }
+
                 selectedFile = value;
 
+                if (selectedFile != null)
+                {
+                    selectedFile.BackgroundBrush = Brushes.LightBlue;
+                    selectedFile.ForegroundBrush = Brushes.Black;
+                }
+
                 OnPropertyChanged();
+
                 OnPropertyChanged(nameof(FileConflictColumnWidth));
                 OnPropertyChanged(nameof(FileContentRowHeight));
             }
@@ -82,7 +108,19 @@ namespace Conflicted.ViewModel
             get => selectedElement;
             set
             {
+                if (selectedElement != null)
+                {
+                    selectedElement.BackgroundBrush = Brushes.Transparent;
+                    selectedElement.ForegroundBrush = Brushes.Black;
+                }
+
                 selectedElement = value;
+
+                if (selectedElement != null)
+                {
+                    selectedElement.BackgroundBrush = Brushes.LightBlue;
+                    selectedElement.ForegroundBrush = Brushes.Black;
+                }
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ElementConflictColumnWidth));

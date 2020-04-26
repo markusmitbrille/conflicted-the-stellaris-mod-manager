@@ -122,6 +122,28 @@ namespace Conflicted.ViewModel
         private RelayCommand moveBottomCommand;
         public RelayCommand MoveBottomCommand => moveBottomCommand ?? (moveBottomCommand = new RelayCommand(ExecuteMoveBottom, CanExecuteMoveBottom));
 
+        private Brush backgroundBrush = Brushes.Transparent;
+        public Brush BackgroundBrush
+        {
+            get => backgroundBrush;
+            set
+            {
+                backgroundBrush = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Brush foregroundBrush = Brushes.Black;
+        public Brush ForegroundBrush
+        {
+            get => foregroundBrush;
+            set
+            {
+                foregroundBrush = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ModViewModel(Mod model) : base(model)
         {
             instances[model] = this;

@@ -28,13 +28,15 @@
         <Style TargetType="DataGridCell">
             <Setter Property="BorderThickness"
                     Value="0" />
+            <Setter Property="Background"
+                    Value="{Binding Path=BackgroundBrush}" />
         </Style>
     </DataGrid.CellStyle>
     <DataGrid.Columns>
         <DataGridTemplateColumn Width="*">
             <DataGridTemplateColumn.CellTemplate>
                 <DataTemplate>
-                    <Grid Margin="5 0">
+                    <Grid Margin="2.5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="*" />
@@ -46,8 +48,9 @@
                                VerticalAlignment="Center"
                                Source="{Binding Path=ThumbnailUrl}" />
                         <TextBlock Grid.Column="1"
-                                   Margin="5 0 0 0"
+                                   Margin="2.5 0 0 0"
                                    VerticalAlignment="Center"
+                                   Foreground="{Binding Path=ForegroundBrush}"
                                    TextTrimming="CharacterEllipsis"
                                    Text="{Binding Path=DisplayName}" />
                     </Grid>
@@ -57,7 +60,7 @@
         <DataGridTemplateColumn Width="auto">
             <DataGridTemplateColumn.CellTemplate>
                 <DataTemplate>
-                    <TextBlock Margin="5 0"
+                    <TextBlock Margin="2.5"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Right"
                                Foreground="{Binding Path=ConflictCountBrush}"
