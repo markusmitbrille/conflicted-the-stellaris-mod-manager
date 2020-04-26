@@ -35,7 +35,6 @@ namespace Conflicted.Model
         {
             get
             {
-
                 return elementConflicts ?? (elementConflicts = mods
                     .SelectMany(mod => mod.Elements)
                     .GroupBy(element => element.ID)
