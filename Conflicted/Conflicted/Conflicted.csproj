@@ -63,6 +63,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Grammar\ElementListener.cs" />
+    <Compile Include="Grammar\KeyedElementListener.cs" />
+    <Compile Include="Grammar\KeyValueElementListener.cs" />
+    <Compile Include="Grammar\NamedElementListener.cs" />
     <Compile Include="ViewModel\DesignTime\ModElements.cs" />
     <Compile Include="ViewModel\DesignTime\ModFiles.cs" />
     <Compile Include="ViewModel\DesignTime\Mods.cs" />
@@ -133,7 +137,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Antlr4 Include="Grammar\stellaris.g4">
+    <Antlr4 Include="Grammar\Stellaris.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Conflicted.Grammar</CustomToolNamespace>
       <Listener>True</Listener>

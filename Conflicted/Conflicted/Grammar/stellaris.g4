@@ -1,4 +1,4 @@
-﻿grammar stellaris;
+﻿grammar Stellaris;
 
 content: 
    expr+

@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Antlr4;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
+using Conflicted.Grammar;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Conflicted.Model
 {
@@ -53,13 +58,36 @@ namespace Conflicted.Model
             return Name;
         }
 
+        private IEnumerable<ModElement> Parse()
+        {
+            AntlrFileStream fileStream = new AntlrFileStream(Path);
+            StellarisLexer lexer = new StellarisLexer(fileStream);
+            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+            StellarisParser parser = new StellarisParser(tokenStream);
+            StellarisParser.ContentContext content = parser.content();
+
+            List<ElementListener> listeners = new List<ElementListener>()
+            {
+                new NamedElementListener(this),
+                new KeyedElementListener(this),
+                new KeyValueElementListener(this),
+            };
+
+            foreach (var listener in listeners)
+            {
+                ParseTreeWalker.Default.Walk(listener, content);
+            }
+
+            return listeners.SelectMany(listener => listener.Elements);
+        }
+
         private IEnumerable<ModElement> Interpret()
         {
             if (Extension != ".txt")
             {
                 return Enumerable.Empty<ModElement>();
             }
-            
+
             switch (Directory)
             {
                 case "portraits":
