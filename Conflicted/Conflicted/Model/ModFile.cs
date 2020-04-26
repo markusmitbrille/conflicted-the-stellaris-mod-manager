@@ -59,7 +59,7 @@ namespace Conflicted.Model
             {
                 return Enumerable.Empty<ModElement>();
             }
-
+            
             switch (Directory)
             {
                 case "portraits":
