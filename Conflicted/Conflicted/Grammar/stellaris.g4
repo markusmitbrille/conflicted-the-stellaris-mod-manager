@@ -5,10 +5,6 @@ content:
    ;
 
 expr: 
-   keyval+
-   ;
-
-keyval:
    key op val
    ;
 

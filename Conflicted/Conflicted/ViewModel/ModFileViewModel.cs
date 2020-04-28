@@ -16,6 +16,7 @@ namespace Conflicted.ViewModel
         public string Name => model.Name;
         public string Extension => model.Extension;
         public string Directory => model.Directory;
+        public string Namespace => model.Namespace;
         public string Text => model.Text;
 
         private ModViewModel mod;

@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Conflicted.Model
 {
-    internal class ModElement
+    class ModElement
     {
         public string ID { get; }
+        public string Name { get; }
         public string Text { get; }
 
         public ModFile File { get; }
@@ -28,10 +29,11 @@ namespace Conflicted.Model
             }
         }
 
-        public ModElement(ModFile file, string id, string text)
+        public ModElement(ModFile file, string id, string name, string text)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
-            ID = id ?? throw new ArgumentNullException(nameof(id));
+            ID = id ?? throw new ArgumentNullException(nameof(text));
+            Name = name ?? throw new ArgumentNullException(nameof(text));
             Text = text ?? throw new ArgumentNullException(nameof(text));
         }
 

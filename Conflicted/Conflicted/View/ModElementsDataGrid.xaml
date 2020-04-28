@@ -64,7 +64,7 @@
                                VerticalAlignment="Center"
                                Foreground="{Binding Path=ForegroundBrush}"
                                TextTrimming="CharacterEllipsis"
-                               Text="{Binding Path=ID}" />
+                               Text="{Binding Path=Name}" />
                 </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -105,7 +105,7 @@
                             <TextBlock TextTrimming="CharacterEllipsis"
                                        Text=" &#11208; " />
                             <TextBlock TextTrimming="CharacterEllipsis"
-                                       Text="{Binding Path=ID}" />
+                                       Text="{Binding Path=Name}" />
                         </StackPanel>
                     </WrapPanel>
                     <TextBlock Margin="0 5 0 0"

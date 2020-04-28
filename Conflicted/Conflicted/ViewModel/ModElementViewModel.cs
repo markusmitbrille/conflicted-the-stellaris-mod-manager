@@ -12,6 +12,7 @@ namespace Conflicted.ViewModel
         private static readonly Dictionary<ModElement, ModElementViewModel> instances = new Dictionary<ModElement, ModElementViewModel>();
 
         public string ID => model.ID;
+        public string Name => model.Name;
         public string Text => model.Text;
 
         private ModFileViewModel file;

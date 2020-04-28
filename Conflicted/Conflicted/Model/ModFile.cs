@@ -21,12 +21,13 @@ namespace Conflicted.Model
         public string NameWithExtension { get; }
         public string Extension { get; }
         public string Directory { get; }
+        public string Namespace { get; }
         public string Text { get; }
 
         public Mod Mod { get; }
 
         private IEnumerable<ModElement> elements;
-        public IEnumerable<ModElement> Elements => elements ?? (elements = Interpret().ToArray());
+        public IEnumerable<ModElement> Elements => elements ?? (elements = Parse().ToArray());
 
         private IEnumerable<ModFile> conflicts;
         public IEnumerable<ModFile> Conflicts
@@ -50,6 +51,7 @@ namespace Conflicted.Model
             NameWithExtension = System.IO.Path.GetFileName(path);
             Extension = System.IO.Path.GetExtension(path);
             Directory = new DirectoryInfo(path).Parent.Name;
+            Namespace = Directory;
             Text = Extension == ".txt" ? File.ReadAllText(path) : null;
         }
 
@@ -66,12 +68,41 @@ namespace Conflicted.Model
             StellarisParser parser = new StellarisParser(tokenStream);
             StellarisParser.ContentContext content = parser.content();
 
-            List<ElementListener> listeners = new List<ElementListener>()
+            List<ElementListener> listeners = new List<ElementListener>();
+            switch (Directory)
             {
-                new NamedElementListener(this),
-                new KeyedElementListener(this),
-                new KeyValueElementListener(this),
-            };
+                case "ambient_objects":
+                case "global_ship_designs":
+                case "on_actions":
+                case "projectiles":
+                case "ship_behaviors":
+                case "technology":
+                case "terraform":
+                    break;
+
+                case "defines":
+                    listeners.Add(new KeyValueElementListener(this));
+                    break;
+
+                case "events":
+                    listeners.Add(new KeyedElementListener(this, "id"));
+                    break;
+
+                case "component_sets":
+                case "component_templates":
+                case "special_projects":
+                case "section_templates":
+                    listeners.Add(new KeyedElementListener(this, "key"));
+                    break;
+
+                case "portraits":
+                    listeners.Add(new NamedElementListener(this, 1));
+                    break;
+
+                default:
+                    listeners.Add(new NamedElementListener(this));
+                    break;
+            }
 
             foreach (var listener in listeners)
             {
@@ -79,341 +110,6 @@ namespace Conflicted.Model
             }
 
             return listeners.SelectMany(listener => listener.Elements);
-        }
-
-        private IEnumerable<ModElement> Interpret()
-        {
-            if (Extension != ".txt")
-            {
-                return Enumerable.Empty<ModElement>();
-            }
-
-            switch (Directory)
-            {
-                case "portraits":
-                    return InterpretNamedBlock(1, "portraits");
-
-                case "defines":
-                    return InterpretKeyValueBlock(0, "defines");
-
-                case "events":
-                    return InterpretKeyedBlock(0, "events", "id");
-
-                case "component_sets":
-                    return InterpretKeyedBlock(0, "component_sets", "key");
-
-                case "component_templates":
-                    return InterpretKeyedBlock(0, "component_templates", "key");
-
-                case "special_projects":
-                    return InterpretKeyedBlock(0, "special_projects", "key");
-
-                case "section_templates":
-                    return InterpretKeyedBlock(0, "section_templates", "key");
-
-                case "ambient_objects":
-                case "on_actions":
-                case "projectiles":
-                case "technology":
-                case "terraform":
-                case "ship_behaviors":
-                case "global_ship_designs":
-                    return InterpretIgnore();
-
-                default:
-                    return InterpretNamedBlock(0, "element");
-            }
-        }
-
-        private IEnumerable<ModElement> InterpretIgnore()
-        {
-            return Enumerable.Empty<ModElement>();
-        }
-
-        private IEnumerable<ModElement> InterpretKeyValueBlock(int blockLevel, string kind)
-        {
-            string text = File.ReadAllText(Path);
-
-            Mode mode = Mode.Code;
-            int level = 0, wordStart = -1, wordEnd = -1, stringStart = -1, stringEnd = -1, elementStart = -1, elementNameStart = -1, elementNameEnd = -1;
-            List<string> lastDefines = new List<string>();
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                switch (mode)
-                {
-                    case Mode.Code:
-                        if (text[i] == '#')
-                        {
-                            mode = Mode.Comment;
-                        }
-                        else if (text[i] == '"')
-                        {
-                            mode = Mode.String;
-                            stringStart = i;
-                        }
-                        else if (text[i] == '=')
-                        {
-                            if (level == blockLevel && wordStart >= 0 && wordStart < wordEnd && wordStart > stringStart)
-                            {
-                                elementNameStart = wordStart;
-                                elementNameEnd = wordEnd;
-                                elementStart = wordStart;
-                            }
-                            if (level == blockLevel && stringStart >= 0 && stringStart < stringEnd && stringStart > wordStart)
-                            {
-                                elementNameStart = stringStart;
-                                elementNameEnd = stringEnd;
-                                elementStart = stringStart;
-                            }
-                            if (level == blockLevel + 1 && wordStart >= 0 && wordStart < wordEnd && wordStart > stringStart)
-                            {
-                                lastDefines.Add(text.Substring(wordStart, wordEnd - wordStart));
-                            }
-                            if (level == blockLevel + 1 && stringStart >= 0 && stringStart < stringEnd && stringStart > wordStart)
-                            {
-                                lastDefines.Add(text.Substring(stringStart, stringEnd - stringStart));
-                            }
-                        }
-                        else if (text[i] == '{')
-                        {
-                            level++;
-                        }
-                        else if (text[i] == '}')
-                        {
-                            level--;
-
-                            if (level == blockLevel && elementNameStart >= 0 && elementNameStart < elementNameEnd)
-                            {
-                                int elementEnd = i + 1;
-                                foreach (var define in lastDefines)
-                                {
-                                    yield return new ModElement(this, $"{kind}::{text.Substring(elementNameStart, elementNameEnd - elementNameStart)}::{define}", text.Substring(elementStart, elementEnd - elementStart));
-                                }
-                                lastDefines = new List<string>();
-                            }
-                        }
-                        else if (!char.IsWhiteSpace(text[i]))
-                        {
-                            mode = Mode.Word;
-                            wordStart = i;
-                        }
-                        break;
-
-                    case Mode.Word:
-                        if (char.IsWhiteSpace(text[i]))
-                        {
-                            mode = Mode.Code;
-                            wordEnd = i;
-                        }
-                        break;
-
-                    case Mode.String:
-                        if (text[i] == '"' && text[i - 1] != '\\')
-                        {
-                            mode = Mode.Code;
-                            stringEnd = i + 1;
-                        }
-                        break;
-
-                    case Mode.Comment:
-                        if (text[i] == '\n')
-                        {
-                            mode = Mode.Code;
-                        }
-                        break;
-                }
-            }
-        }
-
-        private IEnumerable<ModElement> InterpretKeyedBlock(int blockLevel, string kind, string key)
-        {
-            string text = File.ReadAllText(Path);
-
-            Mode mode = Mode.Code;
-            int level = 0, wordStart = -1, wordEnd = -1, stringStart = -1, stringEnd = -1, elementStart = -1, elementNameStart = -1, elementNameEnd = -1;
-            bool nextWordIsID = false;
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                switch (mode)
-                {
-                    case Mode.Code:
-                        if (text[i] == '#')
-                        {
-                            mode = Mode.Comment;
-                        }
-                        else if (text[i] == '"')
-                        {
-                            mode = Mode.String;
-                            stringStart = i;
-                        }
-                        else if (text[i] == '=')
-                        {
-                            if (level == blockLevel && wordStart >= 0 && wordStart < wordEnd && wordStart > stringStart)
-                            {
-                                elementStart = wordStart;
-                            }
-                            if (level == blockLevel && stringStart >= 0 && stringStart < stringEnd && stringStart > wordStart)
-                            {
-                                elementStart = stringStart;
-                            }
-                            if (level == blockLevel + 1 && wordStart >= 0 && wordStart < wordEnd && text.Substring(wordStart, wordEnd - wordStart) == key ||
-                                level == blockLevel + 1 && stringStart >= 0 && stringStart < stringEnd && text.Substring(stringStart, stringEnd - stringStart) == key)
-                            {
-                                nextWordIsID = true;
-                            }
-                        }
-                        else if (text[i] == '{')
-                        {
-                            level++;
-                        }
-                        else if (text[i] == '}')
-                        {
-                            level--;
-
-                            if (level == blockLevel && elementStart >= 0 && elementStart < elementNameEnd)
-                            {
-                                int elementEnd = i + 1;
-                                yield return new ModElement(this, $"{kind}::{text.Substring(elementNameStart, elementNameEnd - elementNameStart)}", text.Substring(elementStart, elementEnd - elementStart));
-                            }
-                        }
-                        else if (!char.IsWhiteSpace(text[i]))
-                        {
-                            mode = Mode.Word;
-                            wordStart = i;
-                        }
-                        break;
-
-                    case Mode.Word:
-                        if (char.IsWhiteSpace(text[i]))
-                        {
-                            mode = Mode.Code;
-                            wordEnd = i;
-
-                            if (nextWordIsID)
-                            {
-                                nextWordIsID = false;
-                                elementNameStart = wordStart;
-                                elementNameEnd = wordEnd;
-                            }
-                        }
-                        break;
-
-                    case Mode.String:
-                        if (text[i] == '"' && text[i - 1] != '\\')
-                        {
-                            mode = Mode.Code;
-                            stringEnd = i + 1;
-
-                            if (nextWordIsID)
-                            {
-                                nextWordIsID = false;
-                                elementNameStart = stringStart;
-                                elementNameEnd = stringEnd;
-                            }
-                        }
-                        break;
-
-                    case Mode.Comment:
-                        if (text[i] == '\n')
-                        {
-                            mode = Mode.Code;
-                        }
-                        break;
-                }
-            }
-        }
-
-        private IEnumerable<ModElement> InterpretNamedBlock(int blockLevel, string kind)
-        {
-            string text = File.ReadAllText(Path);
-
-            Mode mode = Mode.Code;
-            int level = 0, wordStart = -1, wordEnd = -1, stringStart = -1, stringEnd = -1, elementStart = -1, elementNameStart = -1, elementNameEnd = -1;
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                switch (mode)
-                {
-                    case Mode.Code:
-                        if (text[i] == '#')
-                        {
-                            mode = Mode.Comment;
-                        }
-                        else if (text[i] == '"')
-                        {
-                            mode = Mode.String;
-                            stringStart = i;
-                        }
-                        else if (text[i] == '=')
-                        {
-                            if (level == blockLevel && wordStart >= 0 && wordStart < wordEnd && wordStart > stringStart)
-                            {
-                                elementNameStart = wordStart;
-                                elementNameEnd = wordEnd;
-                                elementStart = wordStart;
-                            }
-                            if (level == blockLevel && stringStart >= 0 && stringStart < stringEnd && stringStart > wordStart)
-                            {
-                                elementNameStart = stringStart;
-                                elementNameEnd = stringEnd;
-                                elementStart = stringStart;
-                            }
-                        }
-                        else if (text[i] == '{')
-                        {
-                            level++;
-                        }
-                        else if (text[i] == '}')
-                        {
-                            level--;
-
-                            if (level == blockLevel && elementNameStart >= 0 && elementNameStart < elementNameEnd)
-                            {
-                                int elementEnd = i + 1;
-                                yield return new ModElement(this, $"{kind}::{text.Substring(elementNameStart, elementNameEnd - elementNameStart)}", text.Substring(elementStart, elementEnd - elementStart));
-                            }
-                        }
-                        else if (!char.IsWhiteSpace(text[i]))
-                        {
-                            mode = Mode.Word;
-                            wordStart = i;
-                        }
-                        break;
-
-                    case Mode.Word:
-                        if (char.IsWhiteSpace(text[i]))
-                        {
-                            mode = Mode.Code;
-                            wordEnd = i;
-                        }
-                        break;
-
-                    case Mode.String:
-                        if (text[i] == '"' && text[i - 1] != '\\')
-                        {
-                            mode = Mode.Code;
-                            stringEnd = i + 1;
-                        }
-                        break;
-
-                    case Mode.Comment:
-                        if (text[i] == '\n')
-                        {
-                            mode = Mode.Code;
-                        }
-                        break;
-                }
-            }
-        }
-
-        private enum Mode
-        {
-            Code,
-            Word,
-            String,
-            Comment
         }
     }
 }
