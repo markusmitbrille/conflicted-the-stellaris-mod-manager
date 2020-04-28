@@ -33,7 +33,7 @@ group:
    ;
 
 id: 
-   IDENTIFIER | STRING | INTEGER
+   '@'? IDENTIFIER | STRING | INTEGER
    ;
 
 IDENTIFIER: 

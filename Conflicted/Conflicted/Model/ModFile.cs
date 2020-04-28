@@ -62,8 +62,13 @@ namespace Conflicted.Model
 
         private IEnumerable<ModElement> Parse()
         {
-            AntlrFileStream fileStream = new AntlrFileStream(Path);
-            StellarisLexer lexer = new StellarisLexer(fileStream);
+            if (Text == null)
+            {
+                return Enumerable.Empty<ModElement>();
+            }
+
+            AntlrInputStream stream = new AntlrInputStream(Text);
+            StellarisLexer lexer = new StellarisLexer(stream);
             CommonTokenStream tokenStream = new CommonTokenStream(lexer);
             StellarisParser parser = new StellarisParser(tokenStream);
             StellarisParser.ContentContext content = parser.content();
@@ -72,6 +77,7 @@ namespace Conflicted.Model
             switch (Directory)
             {
                 case "ambient_objects":
+                case "component_tags":
                 case "global_ship_designs":
                 case "on_actions":
                 case "projectiles":
