@@ -2,7 +2,7 @@
 
 namespace Conflicted.Model
 {
-    internal class ModRegistry : Dictionary<string, ModRegistryEntry>
+    class ModRegistry : Dictionary<string, ModRegistryEntry>
     {
         public ModRegistry() : base()
         {

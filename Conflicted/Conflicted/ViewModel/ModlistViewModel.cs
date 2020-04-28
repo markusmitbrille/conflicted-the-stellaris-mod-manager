@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Conflicted.ViewModel
 {
-    internal class ModlistViewModel : ModelViewModel<Modlist>
+    class ModlistViewModel : ModelViewModel<Modlist>
     {
         private static readonly Dictionary<Modlist, ModlistViewModel> instances = new Dictionary<Modlist, ModlistViewModel>();
 

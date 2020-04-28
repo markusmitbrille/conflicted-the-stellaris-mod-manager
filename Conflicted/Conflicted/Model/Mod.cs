@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Conflicted.Model
 {
-    internal class Mod
+    class Mod
     {
         public long? SteamID { get; }
         public string DisplayName { get; }

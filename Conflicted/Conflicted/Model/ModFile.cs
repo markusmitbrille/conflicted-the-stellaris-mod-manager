@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Conflicted.Model
 {
-    internal class ModFile
+    class ModFile
     {
         public string Path { get; }
         public string ID { get; }

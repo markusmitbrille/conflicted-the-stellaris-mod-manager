@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Conflicted.Model
 {
-    internal class ModElement
+    class ModElement
     {
         public string ID { get; }
         public string Text { get; }

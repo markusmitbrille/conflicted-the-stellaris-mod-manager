@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace Conflicted.ViewModel
 {
-    internal class ModFileViewModel : ModelViewModel<ModFile>
+    class ModFileViewModel : ModelViewModel<ModFile>
     {
         private static readonly Dictionary<ModFile, ModFileViewModel> instances = new Dictionary<ModFile, ModFileViewModel>();
 

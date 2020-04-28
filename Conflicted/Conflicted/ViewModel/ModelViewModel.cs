@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Conflicted.ViewModel
 {
-    internal abstract class ModelViewModel<TModel> : BaseViewModel where TModel : class
+    abstract class ModelViewModel<TModel> : BaseViewModel where TModel : class
     {
         protected TModel Model { get; private set; }
 

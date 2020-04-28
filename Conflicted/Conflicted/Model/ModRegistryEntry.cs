@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Conflicted.Model
 {
     [DataContract]
-    internal class ModRegistryEntry
+    class ModRegistryEntry
     {
         [DataMember(Name = "steamId")]
         public long? SteamID { get; set; }

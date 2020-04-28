@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Conflicted.ViewModel
 {
-    internal abstract class BaseViewModel : INotifyPropertyChanged
+    abstract class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

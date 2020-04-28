@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace Conflicted.ViewModel
 {
-    internal class MainWindowViewModel : BaseViewModel
+    class MainWindowViewModel : BaseViewModel
     {
         private ModlistViewModel modlist;
         public ModlistViewModel Modlist => modlist ?? (modlist = ModlistViewModel.Create(new Modlist()));

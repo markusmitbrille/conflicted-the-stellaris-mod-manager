@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Conflicted.Model
 {
-    internal class Modlist
+    class Modlist
     {
         private List<Mod> mods = new List<Mod>();
         public IEnumerable<Mod> Mods => mods?.OrderBy(mod => mod, Mod.OrderComparer.Instance);
