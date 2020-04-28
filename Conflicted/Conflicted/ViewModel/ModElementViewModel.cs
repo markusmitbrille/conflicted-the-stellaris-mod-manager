@@ -11,17 +11,17 @@ namespace Conflicted.ViewModel
     {
         private static readonly Dictionary<ModElement, ModElementViewModel> instances = new Dictionary<ModElement, ModElementViewModel>();
 
-        public string ID => model.ID;
-        public string Text => model.Text;
+        public string ID => Model.ID;
+        public string Text => Model.Text;
 
         private ModFileViewModel file;
-        public ModFileViewModel File => file ?? (file = ModFileViewModel.Create(model.File));
+        public ModFileViewModel File => file ?? (file = ModFileViewModel.Create(Model.File));
 
         private ModViewModel mod;
-        public ModViewModel Mod => mod ?? (mod = ModViewModel.Create(model.Mod));
+        public ModViewModel Mod => mod ?? (mod = ModViewModel.Create(Model.Mod));
 
         private IEnumerable<ModElementViewModel> conflicts;
-        public IEnumerable<ModElementViewModel> Conflicts => conflicts ?? (conflicts = model.Conflicts.Select(file => Create(file)).ToArray());
+        public IEnumerable<ModElementViewModel> Conflicts => conflicts ?? (conflicts = Model.Conflicts.Select(file => Create(file)).ToArray());
 
         private int? conflictCount;
         public int? ConflictCount => conflictCount ?? (conflictCount = Conflicts.Count());

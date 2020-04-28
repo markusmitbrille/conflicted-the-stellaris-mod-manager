@@ -5,11 +5,11 @@ namespace Conflicted.ViewModel
 {
     internal abstract class ModelViewModel<TModel> : BaseViewModel where TModel : class
     {
-        protected readonly TModel model;
+        protected TModel Model { get; private set; }
 
         public ModelViewModel(TModel model) : base()
         {
-            this.model = model ?? throw new ArgumentNullException(nameof(model));
+            Model = model ?? throw new ArgumentNullException(nameof(model));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Conflicted.ViewModel
         private static readonly Dictionary<Modlist, ModlistViewModel> instances = new Dictionary<Modlist, ModlistViewModel>();
 
         private IEnumerable<ModViewModel> mods;
-        public IEnumerable<ModViewModel> Mods => mods ?? (mods = model.Mods.Select(file => ModViewModel.Create(file)).ToArray());
+        public IEnumerable<ModViewModel> Mods => mods ?? (mods = Model.Mods.Select(file => ModViewModel.Create(file)).ToArray());
 
         private int? modCount;
         public int? ModCount => modCount ?? (modCount = Mods.Count());
@@ -134,8 +134,8 @@ namespace Conflicted.ViewModel
                 if (File.Exists($"{path}{Path.DirectorySeparatorChar}mods_registry.json") &&
                     File.Exists($"{path}{Path.DirectorySeparatorChar}game_data.json"))
                 {
-                    model.OpenModRegistry($"{path}{Path.DirectorySeparatorChar}mods_registry.json");
-                    model.OpenGameData($"{path}{Path.DirectorySeparatorChar}game_data.json");
+                    Model.OpenModRegistry($"{path}{Path.DirectorySeparatorChar}mods_registry.json");
+                    Model.OpenGameData($"{path}{Path.DirectorySeparatorChar}game_data.json");
                 }
             }
             else
@@ -156,14 +156,14 @@ namespace Conflicted.ViewModel
             ProgressBarIsIndeterminate = true;
             ProgressBarLabel = "Building File Conflict Cache";
 
-            model.FileConflicts.ToArray();
+            Model.FileConflicts.ToArray();
 
             ProgressBarLabel = "Building Element Conflict Cache";
 
-            model.ElementConflicts.ToArray();
+            Model.ElementConflicts.ToArray();
 
             Progress = 0;
-            Goal = model.Mods.Count();
+            Goal = Model.Mods.Count();
             ProgressBarIsIndeterminate = false;
 
             foreach (var mod in Mods)
@@ -185,7 +185,7 @@ namespace Conflicted.ViewModel
             ProgressBarIsIndeterminate = true;
             ProgressBarLabel = "";
             Progress = 0;
-            Goal = model.Mods.SelectMany(mod => mod.Files).Count();
+            Goal = Model.Mods.SelectMany(mod => mod.Files).Count();
             ProgressBarIsIndeterminate = false;
 
             foreach (var file in Mods.SelectMany(mod => mod.Files))
@@ -204,7 +204,7 @@ namespace Conflicted.ViewModel
             ProgressBarIsIndeterminate = true;
             ProgressBarLabel = "";
             Progress = 0;
-            Goal = model.Mods.SelectMany(mod => mod.Elements).Count();
+            Goal = Model.Mods.SelectMany(mod => mod.Elements).Count();
             ProgressBarIsIndeterminate = false;
 
             foreach (var element in Mods.SelectMany(mod => mod.Elements))
@@ -250,7 +250,7 @@ namespace Conflicted.ViewModel
             currentDirectory = Path.GetDirectoryName(dialog.FileName);
             currentModRegistry = dialog.FileName;
 
-            model.OpenModRegistry(dialog.FileName);
+            Model.OpenModRegistry(dialog.FileName);
 
             OnPropertyChanged(nameof(Mods));
         }
@@ -284,7 +284,7 @@ namespace Conflicted.ViewModel
             currentDirectory = Path.GetDirectoryName(dialog.FileName);
             currentGameData = dialog.FileName;
 
-            model.OpenGameData(dialog.FileName);
+            Model.OpenGameData(dialog.FileName);
 
             OnPropertyChanged(nameof(Mods));
         }
@@ -312,7 +312,7 @@ namespace Conflicted.ViewModel
 
             currentDirectory = Path.GetDirectoryName(dialog.FileName);
 
-            model.SaveGameData(dialog.FileName);
+            Model.SaveGameData(dialog.FileName);
         }
 
         private void Model_RegistryLoading(object sender, EventArgs e)

@@ -11,20 +11,20 @@ namespace Conflicted.ViewModel
     {
         private static readonly Dictionary<Mod, ModViewModel> instances = new Dictionary<Mod, ModViewModel>();
 
-        public long? SteamID => model.SteamID;
-        public string DisplayName => model.DisplayName;
-        public ReadOnlyCollection<string> Tags => model.Tags;
-        public long? TimeUpdated => model.TimeUpdated;
-        public string Source => model.Source;
-        public string ThumbnailUrl => model.ThumbnailUrl;
-        public string DirPath => model.DirPath;
-        public string Status => model.Status;
-        public string ID => model.ID;
-        public string GameRegistryId => model.GameRegistryId;
-        public string RequiredVersion => model.RequiredVersion;
-        public string ArchivePath => model.ArchivePath;
-        public string Cause => model.Cause;
-        public string ThumbnailPath => model.ThumbnailPath;
+        public long? SteamID => Model.SteamID;
+        public string DisplayName => Model.DisplayName;
+        public ReadOnlyCollection<string> Tags => Model.Tags;
+        public long? TimeUpdated => Model.TimeUpdated;
+        public string Source => Model.Source;
+        public string ThumbnailUrl => Model.ThumbnailUrl;
+        public string DirPath => Model.DirPath;
+        public string Status => Model.Status;
+        public string ID => Model.ID;
+        public string GameRegistryId => Model.GameRegistryId;
+        public string RequiredVersion => Model.RequiredVersion;
+        public string ArchivePath => Model.ArchivePath;
+        public string Cause => Model.Cause;
+        public string ThumbnailPath => Model.ThumbnailPath;
         public string WebPageUrl => SteamID.HasValue ? $"https://steamcommunity.com/sharedfiles/filedetails/?id={SteamID.Value}" : "https://www.google.com";
 
         private string page;
@@ -45,14 +45,14 @@ namespace Conflicted.ViewModel
         }
 
         private ModlistViewModel modlist;
-        public ModlistViewModel Modlist => modlist ?? (modlist = ModlistViewModel.Create(model.Modlist));
+        public ModlistViewModel Modlist => modlist ?? (modlist = ModlistViewModel.Create(Model.Modlist));
 
         private IEnumerable<ModFileViewModel> files;
         public IEnumerable<ModFileViewModel> Files
         {
             get
             {
-                return files ?? (files = model.Files
+                return files ?? (files = Model.Files
                     .Select(file => ModFileViewModel.Create(file))
                     .OrderByDescending(file => file.ConflictCount)
                     .ThenBy(file => file.ID)
@@ -68,9 +68,9 @@ namespace Conflicted.ViewModel
         {
             get
             {
-                return fileConflictCount ?? (fileConflictCount = model.Modlist.FileConflicts
+                return fileConflictCount ?? (fileConflictCount = Model.Modlist.FileConflicts
                     .SelectMany(group => group)
-                    .Where(file => file.Mod == model)
+                    .Where(file => file.Mod == Model)
                     .Count());
             }
         }
@@ -80,7 +80,7 @@ namespace Conflicted.ViewModel
         {
             get
             {
-                return elements ?? (elements = model.Elements
+                return elements ?? (elements = Model.Elements
                     .Select(element => ModElementViewModel.Create(element))
                     .OrderByDescending(element => element.ConflictCount)
                     .ThenBy(element => element.File.ID)
@@ -94,9 +94,9 @@ namespace Conflicted.ViewModel
         {
             get
             {
-                return elementConflictCount ?? (elementConflictCount = model.Modlist.ElementConflicts
+                return elementConflictCount ?? (elementConflictCount = Model.Modlist.ElementConflicts
                     .SelectMany(group => group)
-                    .Where(element => element.Mod == model)
+                    .Where(element => element.Mod == Model)
                     .Count());
             }
         }
@@ -164,21 +164,21 @@ namespace Conflicted.ViewModel
             instances.Clear();
         }
 
-        private bool CanExecuteMoveTop(object obj) => model.Modlist.Order.First() != model.ID;
+        private bool CanExecuteMoveTop(object obj) => Model.Modlist.Order.First() != Model.ID;
 
-        private bool CanExecuteMoveUp(object obj) => model.Modlist.Order.First() != model.ID;
+        private bool CanExecuteMoveUp(object obj) => Model.Modlist.Order.First() != Model.ID;
 
-        private bool CanExecuteMoveDown(object obj) => model.Modlist.Order.Last() != model.ID;
+        private bool CanExecuteMoveDown(object obj) => Model.Modlist.Order.Last() != Model.ID;
 
-        private bool CanExecuteMoveBottom(object obj) => model.Modlist.Order.Last() != model.ID;
+        private bool CanExecuteMoveBottom(object obj) => Model.Modlist.Order.Last() != Model.ID;
 
-        private void ExecuteMoveTop(object obj) => model.MoveTop();
+        private void ExecuteMoveTop(object obj) => Model.MoveTop();
 
-        private void ExecuteMoveUp(object obj) => model.MoveUp();
+        private void ExecuteMoveUp(object obj) => Model.MoveUp();
 
-        private void ExecuteMoveDown(object obj) => model.MoveDown();
+        private void ExecuteMoveDown(object obj) => Model.MoveDown();
 
-        private void ExecuteMoveBottom(object obj) => model.MoveBottom();
+        private void ExecuteMoveBottom(object obj) => Model.MoveBottom();
 
         public class OrderComparer : Comparer<ModViewModel>
         {
@@ -191,7 +191,7 @@ namespace Conflicted.ViewModel
 
             public override int Compare(ModViewModel x, ModViewModel y)
             {
-                return Mod.OrderComparer.Instance.Compare(x.model, y.model);
+                return Mod.OrderComparer.Instance.Compare(x.Model, y.Model);
             }
         }
     }

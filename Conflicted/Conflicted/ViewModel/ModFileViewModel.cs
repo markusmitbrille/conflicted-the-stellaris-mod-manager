@@ -11,24 +11,24 @@ namespace Conflicted.ViewModel
     {
         private static readonly Dictionary<ModFile, ModFileViewModel> instances = new Dictionary<ModFile, ModFileViewModel>();
 
-        public string Path => model.Path;
-        public string ID => model.ID;
-        public string Name => model.Name;
-        public string Extension => model.Extension;
-        public string Directory => model.Directory;
-        public string Text => model.Text;
+        public string Path => Model.Path;
+        public string ID => Model.ID;
+        public string Name => Model.Name;
+        public string Extension => Model.Extension;
+        public string Directory => Model.Directory;
+        public string Text => Model.Text;
 
         private ModViewModel mod;
-        public ModViewModel Mod => mod ?? (mod = ModViewModel.Create(model.Mod));
+        public ModViewModel Mod => mod ?? (mod = ModViewModel.Create(Model.Mod));
 
         private IEnumerable<ModElementViewModel> elements;
-        public IEnumerable<ModElementViewModel> Elements => elements ?? (elements = model.Elements.Select(element => ModElementViewModel.Create(element)).ToArray());
+        public IEnumerable<ModElementViewModel> Elements => elements ?? (elements = Model.Elements.Select(element => ModElementViewModel.Create(element)).ToArray());
 
         private int? elementCount;
         public int? ElementCount => elementCount ?? (elementCount = Elements.Count());
 
         private IEnumerable<ModFileViewModel> conflicts;
-        public IEnumerable<ModFileViewModel> Conflicts => conflicts ?? (conflicts = model.Conflicts.Select(file => Create(file)).ToArray());
+        public IEnumerable<ModFileViewModel> Conflicts => conflicts ?? (conflicts = Model.Conflicts.Select(file => Create(file)).ToArray());
 
         private int? conflictCount;
         public int? ConflictCount => conflictCount ?? (conflictCount = Conflicts.Count());
