@@ -11,26 +11,22 @@ namespace Conflicted.Grammar
         public IEnumerable<ModElement> Elements => elements.AsReadOnly();
 
         public ModFile File { get; private set; }
-        public int Level { get; private set; }
 
-        public ElementListener(ModFile file, int level)
+        protected int CurrentLevel { get; private set; } = 0;
+
+        public ElementListener(ModFile file)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
-            Level = level;
-        }
-
-        protected ElementListener(ModFile file) : this(file, 0)
-        {
         }
 
         public override void EnterGroup([NotNull] StellarisParser.GroupContext context)
         {
-            Level++;
+            CurrentLevel++;
         }
 
         public override void ExitGroup([NotNull] StellarisParser.GroupContext context)
         {
-            Level--;
+            CurrentLevel--;
         }
 
         protected void AddElement(ModElement element)
