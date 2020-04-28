@@ -63,6 +63,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Grammar\Lexer.cs" />
+    <Compile Include="Grammar\Parser.cs" />
     <Compile Include="ViewModel\DesignTime\ModElements.cs" />
     <Compile Include="ViewModel\DesignTime\ModFiles.cs" />
     <Compile Include="ViewModel\DesignTime\Mods.cs" />
@@ -149,8 +151,6 @@
       <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Grammar\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
