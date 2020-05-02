@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Conflicted.Model
+namespace Conflicted.Models
 {
     class ModRegistry : Dictionary<string, ModRegistryEntry>
     {

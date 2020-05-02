@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Conflicted.View
+namespace Conflicted.Views
 {
     /// <summary>
     /// Interaction logic for ModFileView.xaml

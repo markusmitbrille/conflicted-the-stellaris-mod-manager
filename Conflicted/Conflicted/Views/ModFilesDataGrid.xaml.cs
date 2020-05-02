@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Conflicted.View
+namespace Conflicted.Views
 {
     /// <summary>
-    /// Interaction logic for ModsDataGrid.xaml
+    /// Interaction logic for ModFileView.xaml
     /// </summary>
-    public partial class ModsDataGrid : DataGrid
+    public partial class ModFilesDataGrid : DataGrid
     {
-        public ModsDataGrid()
+        public ModFilesDataGrid()
         {
             InitializeComponent();
         }

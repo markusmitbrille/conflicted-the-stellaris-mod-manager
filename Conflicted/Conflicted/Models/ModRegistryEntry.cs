@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Conflicted.Model
+namespace Conflicted.Models
 {
     [DataContract]
     class ModRegistryEntry

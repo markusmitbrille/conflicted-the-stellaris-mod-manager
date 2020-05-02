@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace Conflicted.Model
+namespace Conflicted.Models
 {
     class Modlist
     {

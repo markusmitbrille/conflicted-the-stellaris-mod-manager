@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Conflicted.ViewModel
+namespace Conflicted.ViewModels
 {
     abstract class BaseViewModel : INotifyPropertyChanged
     {

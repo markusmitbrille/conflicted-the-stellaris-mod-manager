@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Conflicted.Model
+namespace Conflicted.Models
 {
     class ModElement
     {

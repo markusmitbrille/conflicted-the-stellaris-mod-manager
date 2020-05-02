@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Conflicted.ViewModel
+namespace Conflicted.ViewModels
 {
     abstract class ModelViewModel<TModel> : BaseViewModel where TModel : class
     {

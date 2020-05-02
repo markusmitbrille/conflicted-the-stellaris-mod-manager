@@ -1,4 +1,4 @@
-﻿using Conflicted.Model;
+﻿using Conflicted.Models;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Conflicted.ViewModel
+namespace Conflicted.ViewModels
 {
     class MainWindowViewModel : BaseViewModel
     {

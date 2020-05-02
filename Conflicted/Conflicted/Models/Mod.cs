@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
-namespace Conflicted.Model
+namespace Conflicted.Models
 {
     class Mod
     {

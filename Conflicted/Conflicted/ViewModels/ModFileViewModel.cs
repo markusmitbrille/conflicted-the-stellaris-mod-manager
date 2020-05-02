@@ -1,11 +1,11 @@
-﻿using Conflicted.Model;
+﻿using Conflicted.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
 
-namespace Conflicted.ViewModel
+namespace Conflicted.ViewModels
 {
     class ModFileViewModel : ModelViewModel<ModFile>
     {

@@ -1,5 +1,5 @@
-﻿using Conflicted.Model;
-using Conflicted.ViewModel;
+﻿using Conflicted.Models;
+using Conflicted.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Conflicted.View
+namespace Conflicted.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

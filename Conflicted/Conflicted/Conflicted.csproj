@@ -14,32 +14,32 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="View\MainWindow.xaml.cs">
+    <Compile Update="Views\MainWindow.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Update="View\ModElementsDataGrid.xaml.cs">
+    <Compile Update="Views\ModElementsDataGrid.xaml.cs">
       <DependentUpon>ModElementsDataGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Update="View\ModFilesDataGrid.xaml.cs">
+    <Compile Update="Views\ModFilesDataGrid.xaml.cs">
       <DependentUpon>ModFilesDataGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Update="View\ModsDataGrid.xaml.cs">
+    <Compile Update="Views\ModsDataGrid.xaml.cs">
       <DependentUpon>ModsDataGrid.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="View\MainWindow.xaml">
+    <Page Update="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\ModElementsDataGrid.xaml">
+    <Page Update="Views\ModElementsDataGrid.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\ModFilesDataGrid.xaml">
+    <Page Update="Views\ModFilesDataGrid.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\ModsDataGrid.xaml">
+    <Page Update="Views\ModsDataGrid.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
