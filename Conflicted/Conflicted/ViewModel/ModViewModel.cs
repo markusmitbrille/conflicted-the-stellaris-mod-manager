@@ -44,8 +44,8 @@ namespace Conflicted.ViewModel
             }
         }
 
-        private ModlistViewModel modlist;
-        public ModlistViewModel Modlist => modlist ?? (modlist = ModlistViewModel.Create(Model.Modlist));
+        private ModListViewModel modlist;
+        public ModListViewModel Modlist => modlist ?? (modlist = ModListViewModel.Create(Model.Modlist));
 
         private IEnumerable<ModFileViewModel> files;
         public IEnumerable<ModFileViewModel> Files

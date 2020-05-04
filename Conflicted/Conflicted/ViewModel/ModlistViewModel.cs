@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Conflicted.ViewModel
 {
-    class ModlistViewModel : ModelViewModel<Modlist>
+    class ModListViewModel : ModelViewModel<ModList>
     {
-        private static readonly Dictionary<Modlist, ModlistViewModel> instances = new Dictionary<Modlist, ModlistViewModel>();
+        private static readonly Dictionary<ModList, ModListViewModel> instances = new Dictionary<ModList, ModListViewModel>();
 
         private IEnumerable<ModViewModel> mods;
         public IEnumerable<ModViewModel> Mods => mods ?? (mods = Model.Mods.Select(file => ModViewModel.Create(file)).ToArray());
@@ -79,7 +79,7 @@ namespace Conflicted.ViewModel
         private Task cachingTask;
         private CancellationTokenSource cachingCancellation;
 
-        private ModlistViewModel(Modlist model) : base(model)
+        private ModListViewModel(ModList model) : base(model)
         {
             instances[model] = this;
 
@@ -109,14 +109,14 @@ namespace Conflicted.ViewModel
             cachingTask = Task.Run(Cache, cachingCancellation.Token);
         }
 
-        public static ModlistViewModel Create(Modlist model)
+        public static ModListViewModel Create(ModList model)
         {
             if (instances.ContainsKey(model))
             {
                 return instances[model];
             }
 
-            return new ModlistViewModel(model);
+            return new ModListViewModel(model);
         }
 
         public static void Flush()
@@ -342,25 +342,25 @@ namespace Conflicted.ViewModel
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void Model_ModMovedTop(object sender, Modlist.ModMovedEventArgs e)
+        private void Model_ModMovedTop(object sender, ModList.ModMovedEventArgs e)
         {
             mods = null;
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void Model_ModMovedUp(object sender, Modlist.ModMovedEventArgs e)
+        private void Model_ModMovedUp(object sender, ModList.ModMovedEventArgs e)
         {
             mods = null;
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void Model_ModMovedDown(object sender, Modlist.ModMovedEventArgs e)
+        private void Model_ModMovedDown(object sender, ModList.ModMovedEventArgs e)
         {
             mods = null;
             OnPropertyChanged(nameof(Mods));
         }
 
-        private void Model_ModMovedBottom(object sender, Modlist.ModMovedEventArgs e)
+        private void Model_ModMovedBottom(object sender, ModList.ModMovedEventArgs e)
         {
             mods = null;
             OnPropertyChanged(nameof(Mods));

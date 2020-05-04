@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Conflicted.Model
 {
-    class Modlist
+    class ModList
     {
         private List<Mod> mods = new List<Mod>();
         public IEnumerable<Mod> Mods => mods?.OrderBy(mod => mod, Mod.OrderComparer.Instance);
@@ -55,7 +55,7 @@ namespace Conflicted.Model
         public event EventHandler<ModMovedEventArgs> ModMovedDown;
         public event EventHandler<ModMovedEventArgs> ModMovedBottom;
 
-        public Modlist()
+        public ModList()
         {
         }
 

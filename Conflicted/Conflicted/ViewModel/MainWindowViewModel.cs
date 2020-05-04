@@ -12,8 +12,8 @@ namespace Conflicted.ViewModel
 {
     class MainWindowViewModel : BaseViewModel
     {
-        private ModlistViewModel modlist;
-        public ModlistViewModel Modlist => modlist ?? (modlist = ModlistViewModel.Create(new Modlist()));
+        private ModListViewModel modlist;
+        public ModListViewModel Modlist => modlist ?? (modlist = ModListViewModel.Create(new ModList()));
 
         private ModViewModel selectedMod;
         public ModViewModel SelectedMod

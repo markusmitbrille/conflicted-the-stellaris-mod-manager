@@ -88,14 +88,14 @@
     <Compile Include="Model\ModRegistryEntry.cs" />
     <Compile Include="Model\ModElement.cs" />
     <Compile Include="Model\ModFile.cs" />
-    <Compile Include="Model\Modlist.cs" />
+    <Compile Include="Model\ModList.cs" />
     <Compile Include="Model\ModRegistry.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ModElementViewModel.cs" />
     <Compile Include="ViewModel\ModelViewModel.cs" />
     <Compile Include="ViewModel\ModFileViewModel.cs" />
-    <Compile Include="ViewModel\ModlistViewModel.cs" />
+    <Compile Include="ViewModel\ModListViewModel.cs" />
     <Compile Include="ViewModel\ModViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="View\MainWindow.xaml.cs">

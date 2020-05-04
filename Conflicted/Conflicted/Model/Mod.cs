@@ -23,7 +23,7 @@ namespace Conflicted.Model
         public string Cause { get; }
         public string ThumbnailPath { get; }
 
-        public Modlist Modlist { get; }
+        public ModList Modlist { get; }
 
         private IEnumerable<ModFile> files;
         public IEnumerable<ModFile> Files => files ?? (files = Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories).Select(path => new ModFile(this, path)).ToArray());
@@ -31,7 +31,7 @@ namespace Conflicted.Model
         private IEnumerable<ModElement> elements;
         public IEnumerable<ModElement> Elements => elements ?? (elements = Files.SelectMany(file => file.Elements).ToArray());
 
-        public Mod(Modlist modlist, ModRegistryEntry entry)
+        public Mod(ModList modlist, ModRegistryEntry entry)
         {
             Modlist = modlist ?? throw new ArgumentNullException(nameof(modlist));
 
@@ -56,13 +56,13 @@ namespace Conflicted.Model
             ThumbnailPath = entry.ThumbnailPath;
         }
 
-        public void MoveTop() => Modlist.MoveTop(this);
+        public void MoveTop() => ModList.MoveTop(this);
 
-        public void MoveUp() => Modlist.MoveUp(this);
+        public void MoveUp() => ModList.MoveUp(this);
 
-        public void MoveDown() => Modlist.MoveDown(this);
+        public void MoveDown() => ModList.MoveDown(this);
 
-        public void MoveBottom() => Modlist.MoveBottom(this);
+        public void MoveBottom() => ModList.MoveBottom(this);
 
         public override string ToString()
         {
