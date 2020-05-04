@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using Conflicted.Grammar;
+using Conflicted.Grammar.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Conflicted.Models
 {
@@ -46,11 +45,39 @@ namespace Conflicted.Models
             Extension = System.IO.Path.GetExtension(path);
             Directory = new DirectoryInfo(path).Parent.Name;
             Text = Extension == ".txt" ? File.ReadAllText(path) : null;
+
+            Parse();
         }
 
         public override string ToString()
         {
             return Name;
+        }
+
+        private void Parse()
+        {
+            if (Text == null)
+            {
+                return;
+            }
+
+            Lexicon lexicon = new Lexicon()
+            {
+                new OperatorLexer(),
+                new AccessorLexer(),
+                new BlockStartLexer(),
+                new BlockEndLexer(),
+                new IdentifierLexer(),
+                new NumberLexer(),
+                new StringLexer(),
+                new CommentLexer(),
+                new WhitespaceLexer(),
+            };
+
+            Book book = lexicon.Lex(new SourceReader(Text));
+            book.RemoveAll(token => token is StringToken);
+            book.RemoveAll(token => token is CommentToken);
+            book.RemoveAll(token => token is WhitespaceToken);
         }
 
         private IEnumerable<ModElement> Interpret()
