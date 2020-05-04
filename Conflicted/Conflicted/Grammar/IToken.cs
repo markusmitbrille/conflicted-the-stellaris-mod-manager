@@ -1,7 +1,6 @@
 ﻿namespace Conflicted.Grammar
 {
-    class CommentToken : Token
+    interface IToken : IAbstractSyntaxNode
     {
-
     }
 }
