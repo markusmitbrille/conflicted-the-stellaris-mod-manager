@@ -22,7 +22,7 @@
 
         public bool CanPeek()
         {
-            return index > 0 && index < array.Length;
+            return index >= 0 && index < array.Length;
         }
 
         public T Peek()
@@ -32,7 +32,7 @@
 
         public bool CanPeek(int delta)
         {
-            return index + delta > 0 && index + delta < array.Length;
+            return index + delta >= 0 && index + delta < array.Length;
         }
 
         public T Peek(int delta)
@@ -42,7 +42,7 @@
 
         public bool CanRead()
         {
-            return index > 0 && index < array.Length;
+            return index >= 0 && index < array.Length;
         }
 
         public T Read()
