@@ -7,7 +7,7 @@ namespace Conflicted.Grammar.Tokens
 {
     sealed class BlockEndLexer : Lexer<BlockEndToken>
     {
-        public override BlockEndToken Consume(SourceReader source)
+        public override BlockEndToken Consume(Source source)
         {
             if (source is null)
             {
@@ -22,7 +22,7 @@ namespace Conflicted.Grammar.Tokens
             return new BlockEndToken(source.Read().ToString());
         }
 
-        public override bool IsMatch(SourceReader source)
+        public override bool IsMatch(Source source)
         {
             if (source is null)
             {

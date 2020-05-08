@@ -7,7 +7,7 @@ namespace Conflicted.Grammar.Tokens
 {
     sealed class WhitespaceLexer : Lexer<WhitespaceToken>
     {
-        public override WhitespaceToken Consume(SourceReader source)
+        public override WhitespaceToken Consume(Source source)
         {
             if (source is null)
             {
@@ -30,7 +30,7 @@ namespace Conflicted.Grammar.Tokens
             return new WhitespaceToken(text.ToString());
         }
 
-        public override bool IsMatch(SourceReader source)
+        public override bool IsMatch(Source source)
         {
             if (source is null)
             {

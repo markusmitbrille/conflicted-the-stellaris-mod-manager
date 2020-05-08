@@ -2,13 +2,13 @@
 
 namespace Conflicted.Grammar
 {
-    class Book : List<IToken>
+    class Book : List<Token>
     {
         public Book()
         {
         }
 
-        public Book(IEnumerable<IToken> collection) : base(collection)
+        public Book(IEnumerable<Token> collection) : base(collection)
         {
         }
 

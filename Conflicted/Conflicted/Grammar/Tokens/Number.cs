@@ -7,7 +7,7 @@ namespace Conflicted.Grammar.Tokens
 {
     sealed class NumberLexer : Lexer<NumberToken>
     {
-        public override NumberToken Consume(SourceReader source)
+        public override NumberToken Consume(Source source)
         {
             if (source is null)
             {
@@ -30,7 +30,7 @@ namespace Conflicted.Grammar.Tokens
             return new NumberToken(text.ToString());
         }
 
-        public override bool IsMatch(SourceReader source)
+        public override bool IsMatch(Source source)
         {
             if (source is null)
             {

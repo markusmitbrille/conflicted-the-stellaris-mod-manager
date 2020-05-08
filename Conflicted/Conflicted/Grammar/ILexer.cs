@@ -4,13 +4,13 @@ namespace Conflicted.Grammar
 {
     interface ILexer<out T> where T : Token
     {
-        public bool IsMatch(SourceReader source);
-        public T Consume(SourceReader source);
+        public bool IsMatch(Source source);
+        public T Consume(Source source);
     }
 
     interface ILexer
     {
-        public bool IsMatch(SourceReader source);
-        public Token Consume(SourceReader source);
+        public bool IsMatch(Source source);
+        public Token Consume(Source source);
     }
 }

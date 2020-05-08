@@ -1,6 +1,6 @@
 ﻿namespace Conflicted.Grammar
 {
-    abstract class Reader<T> : IReader<T>
+    abstract class Reader<T>
     {
         private T[] array;
         private int index = 0;

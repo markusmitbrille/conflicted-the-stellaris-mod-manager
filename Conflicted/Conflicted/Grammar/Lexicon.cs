@@ -18,7 +18,7 @@ namespace Conflicted.Grammar
         {
         }
 
-        public Book Lex(SourceReader source)
+        public Book Lex(Source source)
         {
             Book tokens = new Book();
 

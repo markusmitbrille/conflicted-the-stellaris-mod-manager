@@ -74,10 +74,12 @@ namespace Conflicted.Models
                 new WhitespaceLexer(),
             };
 
-            Book book = lexicon.Lex(new SourceReader(Text));
+            Book book = lexicon.Lex(new Source(Text));
             book.RemoveAll(token => token is StringToken);
             book.RemoveAll(token => token is CommentToken);
             book.RemoveAll(token => token is WhitespaceToken);
+
+            throw new NotImplementedException("Reimplement Interpret methods using tokens.");
         }
 
         private IEnumerable<ModElement> Interpret()

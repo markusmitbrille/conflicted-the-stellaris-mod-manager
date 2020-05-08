@@ -8,7 +8,7 @@ namespace Conflicted.Grammar.Tokens
 {
     sealed class CommentLexer : Lexer<CommentToken>
     {
-        public override CommentToken Consume(SourceReader source)
+        public override CommentToken Consume(Source source)
         {
             if (source is null)
             {
@@ -33,7 +33,7 @@ namespace Conflicted.Grammar.Tokens
             return new CommentToken(text.ToString());
         }
 
-        public override bool IsMatch(SourceReader source)
+        public override bool IsMatch(Source source)
         {
             if (source is null)
             {

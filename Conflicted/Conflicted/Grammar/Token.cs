@@ -2,13 +2,9 @@
 
 namespace Conflicted.Grammar
 {
-    abstract class Token : IToken
+    abstract class Token
     {
         public string Text { get; private set; }
-
-        public bool IsRoot => false;
-        public bool IsInternal => false;
-        public bool IsLeaf => true;
 
         protected Token(string text)
         {

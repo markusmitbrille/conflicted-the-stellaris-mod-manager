@@ -6,7 +6,7 @@ namespace Conflicted.Grammar.Tokens
 {
     sealed class OperatorLexer : Lexer<OperatorToken>
     {
-        public override OperatorToken Consume(SourceReader source)
+        public override OperatorToken Consume(Source source)
         {
             if (source is null)
             {
@@ -29,7 +29,7 @@ namespace Conflicted.Grammar.Tokens
             return new OperatorToken(text.ToString());
         }
 
-        public override bool IsMatch(SourceReader source)
+        public override bool IsMatch(Source source)
         {
             if (source is null)
             {

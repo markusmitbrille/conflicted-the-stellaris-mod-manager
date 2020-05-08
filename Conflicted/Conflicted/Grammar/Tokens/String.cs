@@ -7,7 +7,7 @@ namespace Conflicted.Grammar.Tokens
 {
     sealed class StringLexer : Lexer<StringToken>
     {
-        public override StringToken Consume(SourceReader source)
+        public override StringToken Consume(Source source)
         {
             if (source is null)
             {
@@ -35,7 +35,7 @@ namespace Conflicted.Grammar.Tokens
             return new StringToken(text.ToString());
         }
 
-        public override bool IsMatch(SourceReader source)
+        public override bool IsMatch(Source source)
         {
             if (source is null)
             {

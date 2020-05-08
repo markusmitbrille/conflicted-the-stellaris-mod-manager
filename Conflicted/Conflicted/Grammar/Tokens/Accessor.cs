@@ -7,7 +7,7 @@ namespace Conflicted.Grammar.Tokens
 {
     sealed class AccessorLexer : Lexer<AccessorToken>
     {
-        public override AccessorToken Consume(SourceReader source)
+        public override AccessorToken Consume(Source source)
         {
             if (source is null)
             {
@@ -22,7 +22,7 @@ namespace Conflicted.Grammar.Tokens
             return new AccessorToken(source.Read().ToString());
         }
 
-        public override bool IsMatch(SourceReader source)
+        public override bool IsMatch(Source source)
         {
             if (source is null)
             {
