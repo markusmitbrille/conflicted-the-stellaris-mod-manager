@@ -61,6 +61,15 @@ namespace Conflicted.ViewModel
         private ModFileViewModel(ModFile model) : base(model)
         {
             instances[model] = this;
+
+            model.Mod.Modlist.RegistryLoaded += Modlist_RegistryLoaded;
+        }
+
+        private void Modlist_RegistryLoaded(object sender, EventArgs e)
+        {
+            instances.Remove(Model);
+
+            Model.Mod.Modlist.RegistryLoaded -= Modlist_RegistryLoaded;
         }
 
         public static ModFileViewModel Create(ModFile model)
@@ -71,11 +80,6 @@ namespace Conflicted.ViewModel
             }
 
             return new ModFileViewModel(model);
-        }
-
-        public static void Flush()
-        {
-            instances.Clear();
         }
     }
 }

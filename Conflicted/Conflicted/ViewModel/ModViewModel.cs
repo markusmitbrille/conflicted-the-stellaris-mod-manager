@@ -149,6 +149,15 @@ namespace Conflicted.ViewModel
         private ModViewModel(Mod model) : base(model)
         {
             instances[model] = this;
+
+            model.Modlist.RegistryLoaded += Modlist_RegistryLoaded;
+        }
+
+        private void Modlist_RegistryLoaded(object sender, System.EventArgs e)
+        {
+            instances.Remove(Model);
+
+            Model.Modlist.RegistryLoaded -= Modlist_RegistryLoaded;
         }
 
         public static ModViewModel Create(Mod model)
@@ -159,11 +168,6 @@ namespace Conflicted.ViewModel
             }
 
             return new ModViewModel(model);
-        }
-
-        public static void Flush()
-        {
-            instances.Clear();
         }
 
         private bool CanExecuteMoveTop(object obj) => Model.Modlist.Order.First() != Model.ID;

@@ -54,6 +54,15 @@ namespace Conflicted.ViewModel
         private ModElementViewModel(ModElement model) : base(model)
         {
             instances[model] = this;
+
+            model.Mod.Modlist.RegistryLoaded += Modlist_RegistryLoaded;
+        }
+
+        private void Modlist_RegistryLoaded(object sender, EventArgs e)
+        {
+            instances.Remove(Model);
+
+            Model.Mod.Modlist.RegistryLoaded -= Modlist_RegistryLoaded;
         }
 
         public static ModElementViewModel Create(ModElement model)
@@ -64,11 +73,6 @@ namespace Conflicted.ViewModel
             }
 
             return new ModElementViewModel(model);
-        }
-
-        public static void Flush()
-        {
-            instances.Clear();
         }
     }
 }
