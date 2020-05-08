@@ -63,38 +63,113 @@ namespace Conflicted.Model
             
             switch (Directory)
             {
+                case "anomalies":
+                case "archaeological_site_types":
+                case "armies":
+                case "artifact_actions":
+                case "ascension_perks":
+                case "asteroid_belts":
+                case "attitudes":
+                case "bombardment_stances":
+                case "buildings":
+                case "bypass":
+                case "casus_belli":
+                case "colony_automation":
+                case "colony_automation_exceptions":
+                case "colony_types":
+                case "colors":
+                case "component_slot_templates":
+                case "country_customization":
+                case "country_types":
+                case "decisions":
+                case "deposit_categories":
+                case "deposits":
+                case "diplo_phrases":
+                case "diplomatic_actions":
+                case "districts":
+                case "economic_categories":
+                case "economic_plans":
+                case "edicts":
+                case "ethics":
+                case "event_chains":
+                case "fallen_empires":
+                case "federation_law_categories":
+                case "federation_laws":
+                case "federation_perks":
+                case "federation_types":
+                case "galactic_focuses":
+                case "game_rules":
+                case "governments":
+                case "authorities":
+                case "civics":
+                case "graphical_culture":
+                case "leader_classes":
+                case "mandates":
+                case "map_modes":
+                case "megastructures":
+                case "name_lists":
+                case "notification_modifiers":
+                case "observation_station_missions":
+                case "opinion_modifiers":
+                case "personalities":
+                case "planet_classes":
+                case "planet_modifiers":
+                case "policies":
+                case "pop_categories":
+                case "pop_faction_types":
+                case "pop_jobs":
+                case "precursor_civilizations":
+                case "relics":
+                case "resolution_categories":
+                case "resolutions":
+                case "scripted_effects":
+                case "scripted_triggers":
+                case "sector_focuses":
+                case "sector_types":
+                case "ship_sizes":
+                case "solar_system_initializers":
+                case "species_archetypes":
+                case "species_classes":
+                case "species_rights":
+                case "star_classes":
+                case "starbase_buildings":
+                case "starbase_levels":
+                case "starbase_modules":
+                case "starbase_types":
+                case "static_modifiers":
+                case "strategic_resources":
+                case "subjects":
+                case "system_types":
+                case "trade_conversions":
+                case "tradition_categories":
+                case "traditions":
+                case "traits":
+                case "war_goals":
+                    return InterpretNamedBlock(0, Directory);
+
                 case "portraits":
-                    return InterpretNamedBlock(1, "portraits");
+                    return InterpretNamedBlock(1, Directory);
 
                 case "defines":
-                    return InterpretKeyValueBlock(0, "defines");
+                    return InterpretKeyValueBlock(0, Directory);
 
                 case "events":
-                    return InterpretKeyedBlock(0, "events", "id");
+                    return InterpretKeyedBlock(0, Directory, "id");
 
                 case "component_sets":
-                    return InterpretKeyedBlock(0, "component_sets", "key");
-
                 case "component_templates":
-                    return InterpretKeyedBlock(0, "component_templates", "key");
-
-                case "special_projects":
-                    return InterpretKeyedBlock(0, "special_projects", "key");
-
+                case "random_names":
                 case "section_templates":
-                    return InterpretKeyedBlock(0, "section_templates", "key");
-
-                case "ambient_objects":
-                case "on_actions":
-                case "projectiles":
-                case "technology":
-                case "terraform":
-                case "ship_behaviors":
+                case "special_projects":
+                    return InterpretKeyedBlock(0, Directory, "key");
+                
                 case "global_ship_designs":
-                    return InterpretIgnore();
+                case "scripted_loc":
+                case "ship_behaviors":
+                    return InterpretKeyedBlock(0, Directory, "name");
 
                 default:
-                    return InterpretNamedBlock(0, "element");
+                    return InterpretIgnore();
             }
         }
 
