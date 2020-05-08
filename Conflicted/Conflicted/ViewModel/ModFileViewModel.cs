@@ -22,13 +22,13 @@ namespace Conflicted.ViewModel
         public ModViewModel Mod => mod ?? (mod = ModViewModel.Create(Model.Mod));
 
         private IEnumerable<ModElementViewModel> elements;
-        public IEnumerable<ModElementViewModel> Elements => elements ?? (elements = Model.Elements.Select(element => ModElementViewModel.Create(element)).ToArray());
+        public IEnumerable<ModElementViewModel> Elements => elements ?? (elements = Model.Elements.Select(element => ModElementViewModel.Create(element)).ToList().AsReadOnly());
 
         private int? elementCount;
         public int? ElementCount => elementCount ?? (elementCount = Elements.Count());
 
         private IEnumerable<ModFileViewModel> conflicts;
-        public IEnumerable<ModFileViewModel> Conflicts => conflicts ?? (conflicts = Model.Conflicts.Select(file => Create(file)).ToArray());
+        public IEnumerable<ModFileViewModel> Conflicts => conflicts ?? (conflicts = Model.Conflicts.Select(file => Create(file)).ToList().AsReadOnly());
 
         private int? conflictCount;
         public int? ConflictCount => conflictCount ?? (conflictCount = Conflicts.Count());

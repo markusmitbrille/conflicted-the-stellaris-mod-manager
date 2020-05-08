@@ -21,7 +21,7 @@ namespace Conflicted.ViewModel
         public ModViewModel Mod => mod ?? (mod = ModViewModel.Create(Model.Mod));
 
         private IEnumerable<ModElementViewModel> conflicts;
-        public IEnumerable<ModElementViewModel> Conflicts => conflicts ?? (conflicts = Model.Conflicts.Select(file => Create(file)).ToArray());
+        public IEnumerable<ModElementViewModel> Conflicts => conflicts ?? (conflicts = Model.Conflicts.Select(file => Create(file)).ToList().AsReadOnly());
 
         private int? conflictCount;
         public int? ConflictCount => conflictCount ?? (conflictCount = Conflicts.Count());

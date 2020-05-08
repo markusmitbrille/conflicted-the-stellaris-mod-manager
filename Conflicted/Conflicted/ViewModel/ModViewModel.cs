@@ -56,7 +56,8 @@ namespace Conflicted.ViewModel
                     .Select(file => ModFileViewModel.Create(file))
                     .OrderByDescending(file => file.ConflictCount)
                     .ThenBy(file => file.ID)
-                    .ToArray());
+                    .ToList()
+                    .AsReadOnly());
             }
         }
 
@@ -85,7 +86,8 @@ namespace Conflicted.ViewModel
                     .OrderByDescending(element => element.ConflictCount)
                     .ThenBy(element => element.File.ID)
                     .ThenBy(element => element.ID)
-                    .ToArray());
+                    .ToList()
+                    .AsReadOnly());
             }
         }
 

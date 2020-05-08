@@ -27,7 +27,8 @@ namespace Conflicted.Model
                     .Where(file => !Settings.Default.IgnoredFiles.Contains(file.NameWithExtension))
                     .GroupBy(file => file.ID)
                     .Where(group => group.Count() > 1)
-                    .ToArray());
+                    .ToList()
+                    .AsReadOnly());
             }
         }
 
@@ -40,7 +41,8 @@ namespace Conflicted.Model
                     .SelectMany(mod => mod.Elements)
                     .GroupBy(element => element.ID)
                     .Where(group => group.Count() > 1)
-                    .ToArray());
+                    .ToList()
+                    .AsReadOnly());
             }
         }
 

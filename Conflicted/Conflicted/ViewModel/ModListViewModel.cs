@@ -14,7 +14,7 @@ namespace Conflicted.ViewModel
         private static readonly Dictionary<ModList, ModListViewModel> instances = new Dictionary<ModList, ModListViewModel>();
 
         private IEnumerable<ModViewModel> mods;
-        public IEnumerable<ModViewModel> Mods => mods ?? (mods = Model.Mods.Select(file => ModViewModel.Create(file)).ToArray());
+        public IEnumerable<ModViewModel> Mods => mods ?? (mods = Model.Mods.Select(file => ModViewModel.Create(file)).ToList().AsReadOnly());
 
         private int? modCount;
         public int? ModCount => modCount ?? (modCount = Mods.Count());

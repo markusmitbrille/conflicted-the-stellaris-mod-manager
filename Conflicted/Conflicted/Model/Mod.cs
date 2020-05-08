@@ -26,10 +26,10 @@ namespace Conflicted.Model
         public ModList Modlist { get; }
 
         private IEnumerable<ModFile> files;
-        public IEnumerable<ModFile> Files => files ?? (files = Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories).Select(path => new ModFile(this, path)).ToArray());
+        public IEnumerable<ModFile> Files => files ?? (files = Directory.GetFiles(DirPath, "*", SearchOption.AllDirectories).Select(path => new ModFile(this, path)).ToList().AsReadOnly());
 
         private IEnumerable<ModElement> elements;
-        public IEnumerable<ModElement> Elements => elements ?? (elements = Files.SelectMany(file => file.Elements).ToArray());
+        public IEnumerable<ModElement> Elements => elements ?? (elements = Files.SelectMany(file => file.Elements).ToList().AsReadOnly());
 
         public Mod(ModList modlist, ModRegistryEntry entry)
         {

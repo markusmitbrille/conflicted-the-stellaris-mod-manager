@@ -24,7 +24,8 @@ namespace Conflicted.Model
                     .Where(group => group.Key == ID)
                     .SelectMany(group => group)
                     .Where(element => element != this)
-                    .ToArray());
+                    .ToList()
+                    .AsReadOnly());
             }
         }
 

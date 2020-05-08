@@ -21,7 +21,7 @@ namespace Conflicted.Model
         public Mod Mod { get; }
 
         private IEnumerable<ModElement> elements;
-        public IEnumerable<ModElement> Elements => elements ?? (elements = Interpret().ToArray());
+        public IEnumerable<ModElement> Elements => elements ?? (elements = Interpret().ToList().AsReadOnly());
 
         private IEnumerable<ModFile> conflicts;
         public IEnumerable<ModFile> Conflicts
@@ -31,7 +31,8 @@ namespace Conflicted.Model
                 return conflicts ?? (conflicts = Mod.Modlist.FileConflicts.Where(group => group.Key == ID)
                     .SelectMany(group => group)
                     .Where(file => file != this)
-                    .ToArray());
+                    .ToList()
+                    .AsReadOnly());
             }
         }
 
